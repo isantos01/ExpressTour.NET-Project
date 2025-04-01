@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ModelLayer
+namespace ModelLayer.Controllers
 {
-    public class ModelLayer
+    class ReservasController
     {
     }
 }
