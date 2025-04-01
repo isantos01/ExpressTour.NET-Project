@@ -218,9 +218,11 @@ namespace DataLayer
 		private EntitySet<reserva> _reservas;
 		
 		private EntitySet<reservas_excursione> _reservas_excursiones;
-		
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
+        public object Apellido;
+        public object Email;
+
+        #region Extensibility Method Definitions
+        partial void OnLoaded();
     partial void OnValidate(System.Data.Linq.ChangeAction action);
     partial void OnCreated();
     partial void Onid_clienteChanging(int value);
@@ -403,8 +405,11 @@ namespace DataLayer
 				this._reservas_excursiones.Assign(value);
 			}
 		}
-		
-		public event PropertyChangingEventHandler PropertyChanging;
+
+        public int Id { get; set; }
+        public int id { get; set; }
+
+        public event PropertyChangingEventHandler PropertyChanging;
 		
 		public event PropertyChangedEventHandler PropertyChanged;
 		
