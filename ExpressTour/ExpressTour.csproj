@@ -156,7 +156,7 @@
     <Content Include="Content\Image\img\logos\ibm.svg" />
     <Content Include="Content\Image\img\logos\microsoft.svg" />
     <Content Include="Content\Image\img\map-image.png" />
-    <Content Include="Content\Image\img\navbar-logo.svg" />
+    <Content Include="Content\Image\img\navbar-logo.png" />
     <Content Include="Content\Image\img\portfolio\1.jpg" />
     <Content Include="Content\Image\img\portfolio\2.jpg" />
     <Content Include="Content\Image\img\portfolio\3.jpg" />
@@ -165,7 +165,7 @@
     <Content Include="Content\Image\img\portfolio\6.jpg" />
     <Content Include="Content\Image\img\team\1.jpg" />
     <Content Include="Content\Image\img\team\2.jpg" />
-    <Content Include="Content\Image\img\team\3.jpg" />
+    <Content Include="Content\Image\img\team\El mejor.jpg" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
