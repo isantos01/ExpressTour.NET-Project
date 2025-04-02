@@ -1,0 +1,9 @@
+﻿@{
+    ViewData["Title"] = "Panel de Administración";
+}
+<h1>@ViewData["Title"]</h1>
+<p>Bienvenido al sistema de administración de ExpressTour.</p>
+<ul>
+    <li><a href="@Url.Action("Index", "Clientes")">Gestionar Clientes</a></li>
+    <li><a href="@Url.Action("Index", "Paquetes")">Gestionar Paquetes</a></li>
+</ul>

@@ -36,24 +36,15 @@ namespace DataLayer
     partial void Inserttransporte(transporte instance);
     partial void Updatetransporte(transporte instance);
     partial void Deletetransporte(transporte instance);
-    partial void Insertempleado(empleado instance);
-    partial void Updateempleado(empleado instance);
-    partial void Deleteempleado(empleado instance);
-    partial void Insertempleados_reserva(empleados_reserva instance);
-    partial void Updateempleados_reserva(empleados_reserva instance);
-    partial void Deleteempleados_reserva(empleados_reserva instance);
-    partial void Insertexcursione(excursione instance);
-    partial void Updateexcursione(excursione instance);
-    partial void Deleteexcursione(excursione instance);
+    partial void Insertexcursiones(excursiones instance);
+    partial void Updateexcursiones(excursiones instance);
+    partial void Deleteexcursiones(excursiones instance);
     partial void Insertfactura(factura instance);
     partial void Updatefactura(factura instance);
     partial void Deletefactura(factura instance);
     partial void Insertopiniones_cliente(opiniones_cliente instance);
     partial void Updateopiniones_cliente(opiniones_cliente instance);
     partial void Deleteopiniones_cliente(opiniones_cliente instance);
-    partial void Insertpago(pago instance);
-    partial void Updatepago(pago instance);
-    partial void Deletepago(pago instance);
     partial void Insertpaquete(paquete instance);
     partial void Updatepaquete(paquete instance);
     partial void Deletepaquete(paquete instance);
@@ -63,9 +54,9 @@ namespace DataLayer
     partial void Insertreserva(reserva instance);
     partial void Updatereserva(reserva instance);
     partial void Deletereserva(reserva instance);
-    partial void Insertreservas_excursione(reservas_excursione instance);
-    partial void Updatereservas_excursione(reservas_excursione instance);
-    partial void Deletereservas_excursione(reservas_excursione instance);
+    partial void Insertpaquetes_excursione(paquetes_excursione instance);
+    partial void Updatepaquetes_excursione(paquetes_excursione instance);
+    partial void Deletepaquetes_excursione(paquetes_excursione instance);
     #endregion
 		
 		public ExpressTourDataContext() : 
@@ -114,27 +105,11 @@ namespace DataLayer
 			}
 		}
 		
-		public System.Data.Linq.Table<empleado> empleados
+		public System.Data.Linq.Table<excursiones> excursiones
 		{
 			get
 			{
-				return this.GetTable<empleado>();
-			}
-		}
-		
-		public System.Data.Linq.Table<empleados_reserva> empleados_reservas
-		{
-			get
-			{
-				return this.GetTable<empleados_reserva>();
-			}
-		}
-		
-		public System.Data.Linq.Table<excursione> excursiones
-		{
-			get
-			{
-				return this.GetTable<excursione>();
+				return this.GetTable<excursiones>();
 			}
 		}
 		
@@ -151,14 +126,6 @@ namespace DataLayer
 			get
 			{
 				return this.GetTable<opiniones_cliente>();
-			}
-		}
-		
-		public System.Data.Linq.Table<pago> pagos
-		{
-			get
-			{
-				return this.GetTable<pago>();
 			}
 		}
 		
@@ -186,11 +153,11 @@ namespace DataLayer
 			}
 		}
 		
-		public System.Data.Linq.Table<reservas_excursione> reservas_excursiones
+		public System.Data.Linq.Table<paquetes_excursione> paquetes_excursiones
 		{
 			get
 			{
-				return this.GetTable<reservas_excursione>();
+				return this.GetTable<paquetes_excursione>();
 			}
 		}
 	}
@@ -211,18 +178,12 @@ namespace DataLayer
 		
 		private string _direccion;
 		
-		private System.Nullable<System.DateTime> _fecha_registro;
-		
 		private EntitySet<opiniones_cliente> _opiniones_clientes;
 		
 		private EntitySet<reserva> _reservas;
 		
-		private EntitySet<reservas_excursione> _reservas_excursiones;
-        public object Apellido;
-        public object Email;
-
-        #region Extensibility Method Definitions
-        partial void OnLoaded();
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
     partial void OnValidate(System.Data.Linq.ChangeAction action);
     partial void OnCreated();
     partial void Onid_clienteChanging(int value);
@@ -235,15 +196,12 @@ namespace DataLayer
     partial void OntelefonoChanged();
     partial void OndireccionChanging(string value);
     partial void OndireccionChanged();
-    partial void Onfecha_registroChanging(System.Nullable<System.DateTime> value);
-    partial void Onfecha_registroChanged();
     #endregion
 		
 		public cliente()
 		{
 			this._opiniones_clientes = new EntitySet<opiniones_cliente>(new Action<opiniones_cliente>(this.attach_opiniones_clientes), new Action<opiniones_cliente>(this.detach_opiniones_clientes));
 			this._reservas = new EntitySet<reserva>(new Action<reserva>(this.attach_reservas), new Action<reserva>(this.detach_reservas));
-			this._reservas_excursiones = new EntitySet<reservas_excursione>(new Action<reservas_excursione>(this.attach_reservas_excursiones), new Action<reservas_excursione>(this.detach_reservas_excursiones));
 			OnCreated();
 		}
 		
@@ -347,26 +305,6 @@ namespace DataLayer
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_fecha_registro", DbType="DateTime")]
-		public System.Nullable<System.DateTime> fecha_registro
-		{
-			get
-			{
-				return this._fecha_registro;
-			}
-			set
-			{
-				if ((this._fecha_registro != value))
-				{
-					this.Onfecha_registroChanging(value);
-					this.SendPropertyChanging();
-					this._fecha_registro = value;
-					this.SendPropertyChanged("fecha_registro");
-					this.Onfecha_registroChanged();
-				}
-			}
-		}
-		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="cliente_opiniones_cliente", Storage="_opiniones_clientes", ThisKey="id_cliente", OtherKey="id_cliente")]
 		public EntitySet<opiniones_cliente> opiniones_clientes
 		{
@@ -393,23 +331,7 @@ namespace DataLayer
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="cliente_reservas_excursione", Storage="_reservas_excursiones", ThisKey="id_cliente", OtherKey="id_cliente")]
-		public EntitySet<reservas_excursione> reservas_excursiones
-		{
-			get
-			{
-				return this._reservas_excursiones;
-			}
-			set
-			{
-				this._reservas_excursiones.Assign(value);
-			}
-		}
-
-        public int Id { get; set; }
-        public int id { get; set; }
-
-        public event PropertyChangingEventHandler PropertyChanging;
+		public event PropertyChangingEventHandler PropertyChanging;
 		
 		public event PropertyChangedEventHandler PropertyChanged;
 		
@@ -452,18 +374,6 @@ namespace DataLayer
 			this.SendPropertyChanging();
 			entity.cliente = null;
 		}
-		
-		private void attach_reservas_excursiones(reservas_excursione entity)
-		{
-			this.SendPropertyChanging();
-			entity.cliente = this;
-		}
-		
-		private void detach_reservas_excursiones(reservas_excursione entity)
-		{
-			this.SendPropertyChanging();
-			entity.cliente = null;
-		}
 	}
 	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.transporte")]
@@ -478,9 +388,11 @@ namespace DataLayer
 		
 		private int _capacidad;
 		
-		private string _placa;
+		private int _id_proveedor;
 		
-		private string _estado;
+		private EntitySet<paquete> _paquetes;
+		
+		private EntityRef<proveedore> _proveedore;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -492,14 +404,14 @@ namespace DataLayer
     partial void OntipoChanged();
     partial void OncapacidadChanging(int value);
     partial void OncapacidadChanged();
-    partial void OnplacaChanging(string value);
-    partial void OnplacaChanged();
-    partial void OnestadoChanging(string value);
-    partial void OnestadoChanged();
+    partial void Onid_proveedorChanging(int value);
+    partial void Onid_proveedorChanged();
     #endregion
 		
 		public transporte()
 		{
+			this._paquetes = new EntitySet<paquete>(new Action<paquete>(this.attach_paquetes), new Action<paquete>(this.detach_paquetes));
+			this._proveedore = default(EntityRef<proveedore>);
 			OnCreated();
 		}
 		
@@ -563,468 +475,73 @@ namespace DataLayer
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_placa", DbType="NVarChar(20) NOT NULL", CanBeNull=false)]
-		public string placa
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id_proveedor", DbType="Int NOT NULL")]
+		public int id_proveedor
 		{
 			get
 			{
-				return this._placa;
+				return this._id_proveedor;
 			}
 			set
 			{
-				if ((this._placa != value))
+				if ((this._id_proveedor != value))
 				{
-					this.OnplacaChanging(value);
-					this.SendPropertyChanging();
-					this._placa = value;
-					this.SendPropertyChanged("placa");
-					this.OnplacaChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_estado", DbType="NVarChar(20)")]
-		public string estado
-		{
-			get
-			{
-				return this._estado;
-			}
-			set
-			{
-				if ((this._estado != value))
-				{
-					this.OnestadoChanging(value);
-					this.SendPropertyChanging();
-					this._estado = value;
-					this.SendPropertyChanged("estado");
-					this.OnestadoChanged();
-				}
-			}
-		}
-		
-		public event PropertyChangingEventHandler PropertyChanging;
-		
-		public event PropertyChangedEventHandler PropertyChanged;
-		
-		protected virtual void SendPropertyChanging()
-		{
-			if ((this.PropertyChanging != null))
-			{
-				this.PropertyChanging(this, emptyChangingEventArgs);
-			}
-		}
-		
-		protected virtual void SendPropertyChanged(String propertyName)
-		{
-			if ((this.PropertyChanged != null))
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.empleados")]
-	public partial class empleado : INotifyPropertyChanging, INotifyPropertyChanged
-	{
-		
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-		
-		private int _id_empleado;
-		
-		private string _nombre;
-		
-		private string _puesto;
-		
-		private System.Nullable<decimal> _salario;
-		
-		private System.Nullable<System.DateTime> _fecha_contratacion;
-		
-		private string _correo;
-		
-		private EntitySet<empleados_reserva> _empleados_reservas;
-		
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void Onid_empleadoChanging(int value);
-    partial void Onid_empleadoChanged();
-    partial void OnnombreChanging(string value);
-    partial void OnnombreChanged();
-    partial void OnpuestoChanging(string value);
-    partial void OnpuestoChanged();
-    partial void OnsalarioChanging(System.Nullable<decimal> value);
-    partial void OnsalarioChanged();
-    partial void Onfecha_contratacionChanging(System.Nullable<System.DateTime> value);
-    partial void Onfecha_contratacionChanged();
-    partial void OncorreoChanging(string value);
-    partial void OncorreoChanged();
-    #endregion
-		
-		public empleado()
-		{
-			this._empleados_reservas = new EntitySet<empleados_reserva>(new Action<empleados_reserva>(this.attach_empleados_reservas), new Action<empleados_reserva>(this.detach_empleados_reservas));
-			OnCreated();
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id_empleado", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
-		public int id_empleado
-		{
-			get
-			{
-				return this._id_empleado;
-			}
-			set
-			{
-				if ((this._id_empleado != value))
-				{
-					this.Onid_empleadoChanging(value);
-					this.SendPropertyChanging();
-					this._id_empleado = value;
-					this.SendPropertyChanged("id_empleado");
-					this.Onid_empleadoChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_nombre", DbType="NVarChar(100) NOT NULL", CanBeNull=false)]
-		public string nombre
-		{
-			get
-			{
-				return this._nombre;
-			}
-			set
-			{
-				if ((this._nombre != value))
-				{
-					this.OnnombreChanging(value);
-					this.SendPropertyChanging();
-					this._nombre = value;
-					this.SendPropertyChanged("nombre");
-					this.OnnombreChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_puesto", DbType="NVarChar(50)")]
-		public string puesto
-		{
-			get
-			{
-				return this._puesto;
-			}
-			set
-			{
-				if ((this._puesto != value))
-				{
-					this.OnpuestoChanging(value);
-					this.SendPropertyChanging();
-					this._puesto = value;
-					this.SendPropertyChanged("puesto");
-					this.OnpuestoChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_salario", DbType="Decimal(10,2)")]
-		public System.Nullable<decimal> salario
-		{
-			get
-			{
-				return this._salario;
-			}
-			set
-			{
-				if ((this._salario != value))
-				{
-					this.OnsalarioChanging(value);
-					this.SendPropertyChanging();
-					this._salario = value;
-					this.SendPropertyChanged("salario");
-					this.OnsalarioChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_fecha_contratacion", DbType="Date")]
-		public System.Nullable<System.DateTime> fecha_contratacion
-		{
-			get
-			{
-				return this._fecha_contratacion;
-			}
-			set
-			{
-				if ((this._fecha_contratacion != value))
-				{
-					this.Onfecha_contratacionChanging(value);
-					this.SendPropertyChanging();
-					this._fecha_contratacion = value;
-					this.SendPropertyChanged("fecha_contratacion");
-					this.Onfecha_contratacionChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_correo", DbType="NVarChar(100)")]
-		public string correo
-		{
-			get
-			{
-				return this._correo;
-			}
-			set
-			{
-				if ((this._correo != value))
-				{
-					this.OncorreoChanging(value);
-					this.SendPropertyChanging();
-					this._correo = value;
-					this.SendPropertyChanged("correo");
-					this.OncorreoChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="empleado_empleados_reserva", Storage="_empleados_reservas", ThisKey="id_empleado", OtherKey="id_empleado")]
-		public EntitySet<empleados_reserva> empleados_reservas
-		{
-			get
-			{
-				return this._empleados_reservas;
-			}
-			set
-			{
-				this._empleados_reservas.Assign(value);
-			}
-		}
-		
-		public event PropertyChangingEventHandler PropertyChanging;
-		
-		public event PropertyChangedEventHandler PropertyChanged;
-		
-		protected virtual void SendPropertyChanging()
-		{
-			if ((this.PropertyChanging != null))
-			{
-				this.PropertyChanging(this, emptyChangingEventArgs);
-			}
-		}
-		
-		protected virtual void SendPropertyChanged(String propertyName)
-		{
-			if ((this.PropertyChanged != null))
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
-		}
-		
-		private void attach_empleados_reservas(empleados_reserva entity)
-		{
-			this.SendPropertyChanging();
-			entity.empleado = this;
-		}
-		
-		private void detach_empleados_reservas(empleados_reserva entity)
-		{
-			this.SendPropertyChanging();
-			entity.empleado = null;
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.empleados_reservas")]
-	public partial class empleados_reserva : INotifyPropertyChanging, INotifyPropertyChanged
-	{
-		
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-		
-		private int _id_empleado_reserva;
-		
-		private int _id_empleado;
-		
-		private int _id_reserva;
-		
-		private string _rol;
-		
-		private EntityRef<empleado> _empleado;
-		
-		private EntityRef<reserva> _reserva;
-		
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void Onid_empleado_reservaChanging(int value);
-    partial void Onid_empleado_reservaChanged();
-    partial void Onid_empleadoChanging(int value);
-    partial void Onid_empleadoChanged();
-    partial void Onid_reservaChanging(int value);
-    partial void Onid_reservaChanged();
-    partial void OnrolChanging(string value);
-    partial void OnrolChanged();
-    #endregion
-		
-		public empleados_reserva()
-		{
-			this._empleado = default(EntityRef<empleado>);
-			this._reserva = default(EntityRef<reserva>);
-			OnCreated();
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id_empleado_reserva", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
-		public int id_empleado_reserva
-		{
-			get
-			{
-				return this._id_empleado_reserva;
-			}
-			set
-			{
-				if ((this._id_empleado_reserva != value))
-				{
-					this.Onid_empleado_reservaChanging(value);
-					this.SendPropertyChanging();
-					this._id_empleado_reserva = value;
-					this.SendPropertyChanged("id_empleado_reserva");
-					this.Onid_empleado_reservaChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id_empleado", DbType="Int NOT NULL")]
-		public int id_empleado
-		{
-			get
-			{
-				return this._id_empleado;
-			}
-			set
-			{
-				if ((this._id_empleado != value))
-				{
-					if (this._empleado.HasLoadedOrAssignedValue)
+					if (this._proveedore.HasLoadedOrAssignedValue)
 					{
 						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
 					}
-					this.Onid_empleadoChanging(value);
+					this.Onid_proveedorChanging(value);
 					this.SendPropertyChanging();
-					this._id_empleado = value;
-					this.SendPropertyChanged("id_empleado");
-					this.Onid_empleadoChanged();
+					this._id_proveedor = value;
+					this.SendPropertyChanged("id_proveedor");
+					this.Onid_proveedorChanged();
 				}
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id_reserva", DbType="Int NOT NULL")]
-		public int id_reserva
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="transporte_paquete", Storage="_paquetes", ThisKey="id_transporte", OtherKey="id_transporte")]
+		public EntitySet<paquete> paquetes
 		{
 			get
 			{
-				return this._id_reserva;
+				return this._paquetes;
 			}
 			set
 			{
-				if ((this._id_reserva != value))
-				{
-					if (this._reserva.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.Onid_reservaChanging(value);
-					this.SendPropertyChanging();
-					this._id_reserva = value;
-					this.SendPropertyChanged("id_reserva");
-					this.Onid_reservaChanged();
-				}
+				this._paquetes.Assign(value);
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_rol", DbType="NVarChar(50) NOT NULL", CanBeNull=false)]
-		public string rol
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="proveedore_transporte", Storage="_proveedore", ThisKey="id_proveedor", OtherKey="id_proveedor", IsForeignKey=true)]
+		public proveedore proveedore
 		{
 			get
 			{
-				return this._rol;
+				return this._proveedore.Entity;
 			}
 			set
 			{
-				if ((this._rol != value))
-				{
-					this.OnrolChanging(value);
-					this.SendPropertyChanging();
-					this._rol = value;
-					this.SendPropertyChanged("rol");
-					this.OnrolChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="empleado_empleados_reserva", Storage="_empleado", ThisKey="id_empleado", OtherKey="id_empleado", IsForeignKey=true, DeleteOnNull=true, DeleteRule="CASCADE")]
-		public empleado empleado
-		{
-			get
-			{
-				return this._empleado.Entity;
-			}
-			set
-			{
-				empleado previousValue = this._empleado.Entity;
+				proveedore previousValue = this._proveedore.Entity;
 				if (((previousValue != value) 
-							|| (this._empleado.HasLoadedOrAssignedValue == false)))
+							|| (this._proveedore.HasLoadedOrAssignedValue == false)))
 				{
 					this.SendPropertyChanging();
 					if ((previousValue != null))
 					{
-						this._empleado.Entity = null;
-						previousValue.empleados_reservas.Remove(this);
+						this._proveedore.Entity = null;
+						previousValue.transportes.Remove(this);
 					}
-					this._empleado.Entity = value;
+					this._proveedore.Entity = value;
 					if ((value != null))
 					{
-						value.empleados_reservas.Add(this);
-						this._id_empleado = value.id_empleado;
+						value.transportes.Add(this);
+						this._id_proveedor = value.id_proveedor;
 					}
 					else
 					{
-						this._id_empleado = default(int);
+						this._id_proveedor = default(int);
 					}
-					this.SendPropertyChanged("empleado");
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="reserva_empleados_reserva", Storage="_reserva", ThisKey="id_reserva", OtherKey="id_reserva", IsForeignKey=true, DeleteOnNull=true, DeleteRule="CASCADE")]
-		public reserva reserva
-		{
-			get
-			{
-				return this._reserva.Entity;
-			}
-			set
-			{
-				reserva previousValue = this._reserva.Entity;
-				if (((previousValue != value) 
-							|| (this._reserva.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._reserva.Entity = null;
-						previousValue.empleados_reservas.Remove(this);
-					}
-					this._reserva.Entity = value;
-					if ((value != null))
-					{
-						value.empleados_reservas.Add(this);
-						this._id_reserva = value.id_reserva;
-					}
-					else
-					{
-						this._id_reserva = default(int);
-					}
-					this.SendPropertyChanged("reserva");
+					this.SendPropertyChanged("proveedore");
 				}
 			}
 		}
@@ -1047,11 +564,23 @@ namespace DataLayer
 			{
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
+		}
+		
+		private void attach_paquetes(paquete entity)
+		{
+			this.SendPropertyChanging();
+			entity.transporte = this;
+		}
+		
+		private void detach_paquetes(paquete entity)
+		{
+			this.SendPropertyChanging();
+			entity.transporte = null;
 		}
 	}
 	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.excursiones")]
-	public partial class excursione : INotifyPropertyChanging, INotifyPropertyChanged
+	public partial class excursiones : INotifyPropertyChanging, INotifyPropertyChanged
 	{
 		
 		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
@@ -1066,7 +595,7 @@ namespace DataLayer
 		
 		private int _capacidad;
 		
-		private EntitySet<reservas_excursione> _reservas_excursiones;
+		private EntitySet<paquetes_excursione> _paquetes_excursiones;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -1084,9 +613,9 @@ namespace DataLayer
     partial void OncapacidadChanged();
     #endregion
 		
-		public excursione()
+		public excursiones()
 		{
-			this._reservas_excursiones = new EntitySet<reservas_excursione>(new Action<reservas_excursione>(this.attach_reservas_excursiones), new Action<reservas_excursione>(this.detach_reservas_excursiones));
+			this._paquetes_excursiones = new EntitySet<paquetes_excursione>(new Action<paquetes_excursione>(this.attach_paquetes_excursiones), new Action<paquetes_excursione>(this.detach_paquetes_excursiones));
 			OnCreated();
 		}
 		
@@ -1190,16 +719,16 @@ namespace DataLayer
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="excursione_reservas_excursione", Storage="_reservas_excursiones", ThisKey="id_excursion", OtherKey="id_excursion")]
-		public EntitySet<reservas_excursione> reservas_excursiones
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="excursiones_paquetes_excursione", Storage="_paquetes_excursiones", ThisKey="id_excursion", OtherKey="id_excursion")]
+		public EntitySet<paquetes_excursione> paquetes_excursiones
 		{
 			get
 			{
-				return this._reservas_excursiones;
+				return this._paquetes_excursiones;
 			}
 			set
 			{
-				this._reservas_excursiones.Assign(value);
+				this._paquetes_excursiones.Assign(value);
 			}
 		}
 		
@@ -1223,16 +752,16 @@ namespace DataLayer
 			}
 		}
 		
-		private void attach_reservas_excursiones(reservas_excursione entity)
+		private void attach_paquetes_excursiones(paquetes_excursione entity)
 		{
 			this.SendPropertyChanging();
-			entity.excursione = this;
+			entity.excursiones = this;
 		}
 		
-		private void detach_reservas_excursiones(reservas_excursione entity)
+		private void detach_paquetes_excursiones(paquetes_excursione entity)
 		{
 			this.SendPropertyChanging();
-			entity.excursione = null;
+			entity.excursiones = null;
 		}
 	}
 	
@@ -1250,8 +779,6 @@ namespace DataLayer
 		
 		private System.Nullable<System.DateTime> _fecha_emision;
 		
-		private string _metodo_pago;
-		
 		private EntityRef<reserva> _reserva;
 		
     #region Extensibility Method Definitions
@@ -1266,8 +793,6 @@ namespace DataLayer
     partial void OntotalChanged();
     partial void Onfecha_emisionChanging(System.Nullable<System.DateTime> value);
     partial void Onfecha_emisionChanged();
-    partial void Onmetodo_pagoChanging(string value);
-    partial void Onmetodo_pagoChanged();
     #endregion
 		
 		public factura()
@@ -1360,26 +885,6 @@ namespace DataLayer
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_metodo_pago", DbType="NVarChar(50)")]
-		public string metodo_pago
-		{
-			get
-			{
-				return this._metodo_pago;
-			}
-			set
-			{
-				if ((this._metodo_pago != value))
-				{
-					this.Onmetodo_pagoChanging(value);
-					this.SendPropertyChanging();
-					this._metodo_pago = value;
-					this.SendPropertyChanged("metodo_pago");
-					this.Onmetodo_pagoChanged();
-				}
-			}
-		}
-		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="reserva_factura", Storage="_reserva", ThisKey="id_reserva", OtherKey="id_reserva", IsForeignKey=true)]
 		public reserva reserva
 		{
@@ -1447,13 +952,11 @@ namespace DataLayer
 		
 		private int _id_paquete;
 		
-		private System.Nullable<int> _calificacion;
-		
 		private string _comentario;
 		
-		private System.Nullable<System.DateTime> _fecha;
+		private System.Nullable<int> _calificacion;
 		
-		private string _respuesta_empresa;
+		private System.Nullable<System.DateTime> _fecha_publicacion;
 		
 		private EntityRef<cliente> _cliente;
 		
@@ -1469,14 +972,12 @@ namespace DataLayer
     partial void Onid_clienteChanged();
     partial void Onid_paqueteChanging(int value);
     partial void Onid_paqueteChanged();
-    partial void OncalificacionChanging(System.Nullable<int> value);
-    partial void OncalificacionChanged();
     partial void OncomentarioChanging(string value);
     partial void OncomentarioChanged();
-    partial void OnfechaChanging(System.Nullable<System.DateTime> value);
-    partial void OnfechaChanged();
-    partial void Onrespuesta_empresaChanging(string value);
-    partial void Onrespuesta_empresaChanged();
+    partial void OncalificacionChanging(System.Nullable<int> value);
+    partial void OncalificacionChanged();
+    partial void Onfecha_publicacionChanging(System.Nullable<System.DateTime> value);
+    partial void Onfecha_publicacionChanged();
     #endregion
 		
 		public opiniones_cliente()
@@ -1554,26 +1055,6 @@ namespace DataLayer
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_calificacion", DbType="Int")]
-		public System.Nullable<int> calificacion
-		{
-			get
-			{
-				return this._calificacion;
-			}
-			set
-			{
-				if ((this._calificacion != value))
-				{
-					this.OncalificacionChanging(value);
-					this.SendPropertyChanging();
-					this._calificacion = value;
-					this.SendPropertyChanged("calificacion");
-					this.OncalificacionChanged();
-				}
-			}
-		}
-		
 		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_comentario", DbType="NVarChar(MAX)")]
 		public string comentario
 		{
@@ -1594,42 +1075,42 @@ namespace DataLayer
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_fecha", DbType="DateTime")]
-		public System.Nullable<System.DateTime> fecha
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_calificacion", DbType="Int")]
+		public System.Nullable<int> calificacion
 		{
 			get
 			{
-				return this._fecha;
+				return this._calificacion;
 			}
 			set
 			{
-				if ((this._fecha != value))
+				if ((this._calificacion != value))
 				{
-					this.OnfechaChanging(value);
+					this.OncalificacionChanging(value);
 					this.SendPropertyChanging();
-					this._fecha = value;
-					this.SendPropertyChanged("fecha");
-					this.OnfechaChanged();
+					this._calificacion = value;
+					this.SendPropertyChanged("calificacion");
+					this.OncalificacionChanged();
 				}
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_respuesta_empresa", DbType="NVarChar(MAX)")]
-		public string respuesta_empresa
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_fecha_publicacion", DbType="DateTime")]
+		public System.Nullable<System.DateTime> fecha_publicacion
 		{
 			get
 			{
-				return this._respuesta_empresa;
+				return this._fecha_publicacion;
 			}
 			set
 			{
-				if ((this._respuesta_empresa != value))
+				if ((this._fecha_publicacion != value))
 				{
-					this.Onrespuesta_empresaChanging(value);
+					this.Onfecha_publicacionChanging(value);
 					this.SendPropertyChanging();
-					this._respuesta_empresa = value;
-					this.SendPropertyChanged("respuesta_empresa");
-					this.Onrespuesta_empresaChanged();
+					this._fecha_publicacion = value;
+					this.SendPropertyChanged("fecha_publicacion");
+					this.Onfecha_publicacionChanged();
 				}
 			}
 		}
@@ -1723,229 +1204,6 @@ namespace DataLayer
 		}
 	}
 	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.pagos")]
-	public partial class pago : INotifyPropertyChanging, INotifyPropertyChanged
-	{
-		
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-		
-		private int _id_pago;
-		
-		private int _id_reserva;
-		
-		private decimal _monto;
-		
-		private string _metodo_pago;
-		
-		private System.Nullable<System.DateTime> _fecha_pago;
-		
-		private string _referencia_pago;
-		
-		private EntityRef<reserva> _reserva;
-		
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void Onid_pagoChanging(int value);
-    partial void Onid_pagoChanged();
-    partial void Onid_reservaChanging(int value);
-    partial void Onid_reservaChanged();
-    partial void OnmontoChanging(decimal value);
-    partial void OnmontoChanged();
-    partial void Onmetodo_pagoChanging(string value);
-    partial void Onmetodo_pagoChanged();
-    partial void Onfecha_pagoChanging(System.Nullable<System.DateTime> value);
-    partial void Onfecha_pagoChanged();
-    partial void Onreferencia_pagoChanging(string value);
-    partial void Onreferencia_pagoChanged();
-    #endregion
-		
-		public pago()
-		{
-			this._reserva = default(EntityRef<reserva>);
-			OnCreated();
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id_pago", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
-		public int id_pago
-		{
-			get
-			{
-				return this._id_pago;
-			}
-			set
-			{
-				if ((this._id_pago != value))
-				{
-					this.Onid_pagoChanging(value);
-					this.SendPropertyChanging();
-					this._id_pago = value;
-					this.SendPropertyChanged("id_pago");
-					this.Onid_pagoChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id_reserva", DbType="Int NOT NULL")]
-		public int id_reserva
-		{
-			get
-			{
-				return this._id_reserva;
-			}
-			set
-			{
-				if ((this._id_reserva != value))
-				{
-					if (this._reserva.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.Onid_reservaChanging(value);
-					this.SendPropertyChanging();
-					this._id_reserva = value;
-					this.SendPropertyChanged("id_reserva");
-					this.Onid_reservaChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_monto", DbType="Decimal(10,2) NOT NULL")]
-		public decimal monto
-		{
-			get
-			{
-				return this._monto;
-			}
-			set
-			{
-				if ((this._monto != value))
-				{
-					this.OnmontoChanging(value);
-					this.SendPropertyChanging();
-					this._monto = value;
-					this.SendPropertyChanged("monto");
-					this.OnmontoChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_metodo_pago", DbType="NVarChar(50)")]
-		public string metodo_pago
-		{
-			get
-			{
-				return this._metodo_pago;
-			}
-			set
-			{
-				if ((this._metodo_pago != value))
-				{
-					this.Onmetodo_pagoChanging(value);
-					this.SendPropertyChanging();
-					this._metodo_pago = value;
-					this.SendPropertyChanged("metodo_pago");
-					this.Onmetodo_pagoChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_fecha_pago", DbType="DateTime")]
-		public System.Nullable<System.DateTime> fecha_pago
-		{
-			get
-			{
-				return this._fecha_pago;
-			}
-			set
-			{
-				if ((this._fecha_pago != value))
-				{
-					this.Onfecha_pagoChanging(value);
-					this.SendPropertyChanging();
-					this._fecha_pago = value;
-					this.SendPropertyChanged("fecha_pago");
-					this.Onfecha_pagoChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_referencia_pago", DbType="NVarChar(100)")]
-		public string referencia_pago
-		{
-			get
-			{
-				return this._referencia_pago;
-			}
-			set
-			{
-				if ((this._referencia_pago != value))
-				{
-					this.Onreferencia_pagoChanging(value);
-					this.SendPropertyChanging();
-					this._referencia_pago = value;
-					this.SendPropertyChanged("referencia_pago");
-					this.Onreferencia_pagoChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="reserva_pago", Storage="_reserva", ThisKey="id_reserva", OtherKey="id_reserva", IsForeignKey=true)]
-		public reserva reserva
-		{
-			get
-			{
-				return this._reserva.Entity;
-			}
-			set
-			{
-				reserva previousValue = this._reserva.Entity;
-				if (((previousValue != value) 
-							|| (this._reserva.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._reserva.Entity = null;
-						previousValue.pagos.Remove(this);
-					}
-					this._reserva.Entity = value;
-					if ((value != null))
-					{
-						value.pagos.Add(this);
-						this._id_reserva = value.id_reserva;
-					}
-					else
-					{
-						this._id_reserva = default(int);
-					}
-					this.SendPropertyChanged("reserva");
-				}
-			}
-		}
-		
-		public event PropertyChangingEventHandler PropertyChanging;
-		
-		public event PropertyChangedEventHandler PropertyChanged;
-		
-		protected virtual void SendPropertyChanging()
-		{
-			if ((this.PropertyChanging != null))
-			{
-				this.PropertyChanging(this, emptyChangingEventArgs);
-			}
-		}
-		
-		protected virtual void SendPropertyChanged(String propertyName)
-		{
-			if ((this.PropertyChanged != null))
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
-		}
-	}
-	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.paquetes")]
 	public partial class paquete : INotifyPropertyChanging, INotifyPropertyChanged
 	{
@@ -1962,11 +1220,15 @@ namespace DataLayer
 		
 		private int _duracion_dias;
 		
-		private string _categoria;
+		private System.Nullable<int> _id_transporte;
 		
 		private EntitySet<opiniones_cliente> _opiniones_clientes;
 		
 		private EntitySet<reserva> _reservas;
+		
+		private EntitySet<paquetes_excursione> _paquetes_excursiones;
+		
+		private EntityRef<transporte> _transporte;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -1982,14 +1244,16 @@ namespace DataLayer
     partial void OnprecioChanged();
     partial void Onduracion_diasChanging(int value);
     partial void Onduracion_diasChanged();
-    partial void OncategoriaChanging(string value);
-    partial void OncategoriaChanged();
+    partial void Onid_transporteChanging(System.Nullable<int> value);
+    partial void Onid_transporteChanged();
     #endregion
 		
 		public paquete()
 		{
 			this._opiniones_clientes = new EntitySet<opiniones_cliente>(new Action<opiniones_cliente>(this.attach_opiniones_clientes), new Action<opiniones_cliente>(this.detach_opiniones_clientes));
 			this._reservas = new EntitySet<reserva>(new Action<reserva>(this.attach_reservas), new Action<reserva>(this.detach_reservas));
+			this._paquetes_excursiones = new EntitySet<paquetes_excursione>(new Action<paquetes_excursione>(this.attach_paquetes_excursiones), new Action<paquetes_excursione>(this.detach_paquetes_excursiones));
+			this._transporte = default(EntityRef<transporte>);
 			OnCreated();
 		}
 		
@@ -2093,22 +1357,26 @@ namespace DataLayer
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_categoria", DbType="NVarChar(50)")]
-		public string categoria
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id_transporte", DbType="Int")]
+		public System.Nullable<int> id_transporte
 		{
 			get
 			{
-				return this._categoria;
+				return this._id_transporte;
 			}
 			set
 			{
-				if ((this._categoria != value))
+				if ((this._id_transporte != value))
 				{
-					this.OncategoriaChanging(value);
+					if (this._transporte.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.Onid_transporteChanging(value);
 					this.SendPropertyChanging();
-					this._categoria = value;
-					this.SendPropertyChanged("categoria");
-					this.OncategoriaChanged();
+					this._id_transporte = value;
+					this.SendPropertyChanged("id_transporte");
+					this.Onid_transporteChanged();
 				}
 			}
 		}
@@ -2136,6 +1404,53 @@ namespace DataLayer
 			set
 			{
 				this._reservas.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="paquete_paquetes_excursione", Storage="_paquetes_excursiones", ThisKey="id_paquete", OtherKey="id_paquete")]
+		public EntitySet<paquetes_excursione> paquetes_excursiones
+		{
+			get
+			{
+				return this._paquetes_excursiones;
+			}
+			set
+			{
+				this._paquetes_excursiones.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="transporte_paquete", Storage="_transporte", ThisKey="id_transporte", OtherKey="id_transporte", IsForeignKey=true)]
+		public transporte transporte
+		{
+			get
+			{
+				return this._transporte.Entity;
+			}
+			set
+			{
+				transporte previousValue = this._transporte.Entity;
+				if (((previousValue != value) 
+							|| (this._transporte.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._transporte.Entity = null;
+						previousValue.paquetes.Remove(this);
+					}
+					this._transporte.Entity = value;
+					if ((value != null))
+					{
+						value.paquetes.Add(this);
+						this._id_transporte = value.id_transporte;
+					}
+					else
+					{
+						this._id_transporte = default(Nullable<int>);
+					}
+					this.SendPropertyChanged("transporte");
+				}
 			}
 		}
 		
@@ -2182,6 +1497,18 @@ namespace DataLayer
 			this.SendPropertyChanging();
 			entity.paquete = null;
 		}
+		
+		private void attach_paquetes_excursiones(paquetes_excursione entity)
+		{
+			this.SendPropertyChanging();
+			entity.paquete = this;
+		}
+		
+		private void detach_paquetes_excursiones(paquetes_excursione entity)
+		{
+			this.SendPropertyChanging();
+			entity.paquete = null;
+		}
 	}
 	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.proveedores")]
@@ -2198,9 +1525,7 @@ namespace DataLayer
 		
 		private string _telefono;
 		
-		private string _correo;
-		
-		private string _direccion;
+		private EntitySet<transporte> _transportes;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -2214,14 +1539,11 @@ namespace DataLayer
     partial void OncontactoChanged();
     partial void OntelefonoChanging(string value);
     partial void OntelefonoChanged();
-    partial void OncorreoChanging(string value);
-    partial void OncorreoChanged();
-    partial void OndireccionChanging(string value);
-    partial void OndireccionChanged();
     #endregion
 		
 		public proveedore()
 		{
+			this._transportes = new EntitySet<transporte>(new Action<transporte>(this.attach_transportes), new Action<transporte>(this.detach_transportes));
 			OnCreated();
 		}
 		
@@ -2305,43 +1627,16 @@ namespace DataLayer
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_correo", DbType="NVarChar(100)")]
-		public string correo
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="proveedore_transporte", Storage="_transportes", ThisKey="id_proveedor", OtherKey="id_proveedor")]
+		public EntitySet<transporte> transportes
 		{
 			get
 			{
-				return this._correo;
+				return this._transportes;
 			}
 			set
 			{
-				if ((this._correo != value))
-				{
-					this.OncorreoChanging(value);
-					this.SendPropertyChanging();
-					this._correo = value;
-					this.SendPropertyChanged("correo");
-					this.OncorreoChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_direccion", DbType="NVarChar(255)")]
-		public string direccion
-		{
-			get
-			{
-				return this._direccion;
-			}
-			set
-			{
-				if ((this._direccion != value))
-				{
-					this.OndireccionChanging(value);
-					this.SendPropertyChanging();
-					this._direccion = value;
-					this.SendPropertyChanged("direccion");
-					this.OndireccionChanged();
-				}
+				this._transportes.Assign(value);
 			}
 		}
 		
@@ -2364,6 +1659,18 @@ namespace DataLayer
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
 		}
+		
+		private void attach_transportes(transporte entity)
+		{
+			this.SendPropertyChanging();
+			entity.proveedore = this;
+		}
+		
+		private void detach_transportes(transporte entity)
+		{
+			this.SendPropertyChanging();
+			entity.proveedore = null;
+		}
 	}
 	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.reservas")]
@@ -2382,13 +1689,7 @@ namespace DataLayer
 		
 		private string _estado;
 		
-		private string _comentarios;
-		
-		private EntitySet<empleados_reserva> _empleados_reservas;
-		
 		private EntitySet<factura> _facturas;
-		
-		private EntitySet<pago> _pagos;
 		
 		private EntityRef<cliente> _cliente;
 		
@@ -2408,15 +1709,11 @@ namespace DataLayer
     partial void Onfecha_reservaChanged();
     partial void OnestadoChanging(string value);
     partial void OnestadoChanged();
-    partial void OncomentariosChanging(string value);
-    partial void OncomentariosChanged();
     #endregion
 		
 		public reserva()
 		{
-			this._empleados_reservas = new EntitySet<empleados_reserva>(new Action<empleados_reserva>(this.attach_empleados_reservas), new Action<empleados_reserva>(this.detach_empleados_reservas));
 			this._facturas = new EntitySet<factura>(new Action<factura>(this.attach_facturas), new Action<factura>(this.detach_facturas));
-			this._pagos = new EntitySet<pago>(new Action<pago>(this.attach_pagos), new Action<pago>(this.detach_pagos));
 			this._cliente = default(EntityRef<cliente>);
 			this._paquete = default(EntityRef<paquete>);
 			OnCreated();
@@ -2530,39 +1827,6 @@ namespace DataLayer
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_comentarios", DbType="NVarChar(MAX)")]
-		public string comentarios
-		{
-			get
-			{
-				return this._comentarios;
-			}
-			set
-			{
-				if ((this._comentarios != value))
-				{
-					this.OncomentariosChanging(value);
-					this.SendPropertyChanging();
-					this._comentarios = value;
-					this.SendPropertyChanged("comentarios");
-					this.OncomentariosChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="reserva_empleados_reserva", Storage="_empleados_reservas", ThisKey="id_reserva", OtherKey="id_reserva")]
-		public EntitySet<empleados_reserva> empleados_reservas
-		{
-			get
-			{
-				return this._empleados_reservas;
-			}
-			set
-			{
-				this._empleados_reservas.Assign(value);
-			}
-		}
-		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="reserva_factura", Storage="_facturas", ThisKey="id_reserva", OtherKey="id_reserva")]
 		public EntitySet<factura> facturas
 		{
@@ -2573,19 +1837,6 @@ namespace DataLayer
 			set
 			{
 				this._facturas.Assign(value);
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="reserva_pago", Storage="_pagos", ThisKey="id_reserva", OtherKey="id_reserva")]
-		public EntitySet<pago> pagos
-		{
-			get
-			{
-				return this._pagos;
-			}
-			set
-			{
-				this._pagos.Assign(value);
 			}
 		}
 		
@@ -2677,18 +1928,6 @@ namespace DataLayer
 			}
 		}
 		
-		private void attach_empleados_reservas(empleados_reserva entity)
-		{
-			this.SendPropertyChanging();
-			entity.reserva = this;
-		}
-		
-		private void detach_empleados_reservas(empleados_reserva entity)
-		{
-			this.SendPropertyChanging();
-			entity.reserva = null;
-		}
-		
 		private void attach_facturas(factura entity)
 		{
 			this.SendPropertyChanging();
@@ -2700,99 +1939,83 @@ namespace DataLayer
 			this.SendPropertyChanging();
 			entity.reserva = null;
 		}
-		
-		private void attach_pagos(pago entity)
-		{
-			this.SendPropertyChanging();
-			entity.reserva = this;
-		}
-		
-		private void detach_pagos(pago entity)
-		{
-			this.SendPropertyChanging();
-			entity.reserva = null;
-		}
 	}
 	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.reservas_excursiones")]
-	public partial class reservas_excursione : INotifyPropertyChanging, INotifyPropertyChanged
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.paquetes_excursiones")]
+	public partial class paquetes_excursione : INotifyPropertyChanging, INotifyPropertyChanged
 	{
 		
 		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
 		
-		private int _id_reserva_excursion;
+		private int _id_paquete_excursion;
 		
-		private int _id_cliente;
+		private int _id_paquete;
 		
 		private int _id_excursion;
 		
-		private System.Nullable<System.DateTime> _fecha_reserva;
+		private EntityRef<excursiones> _excursiones;
 		
-		private EntityRef<cliente> _cliente;
-		
-		private EntityRef<excursione> _excursione;
+		private EntityRef<paquete> _paquete;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
     partial void OnValidate(System.Data.Linq.ChangeAction action);
     partial void OnCreated();
-    partial void Onid_reserva_excursionChanging(int value);
-    partial void Onid_reserva_excursionChanged();
-    partial void Onid_clienteChanging(int value);
-    partial void Onid_clienteChanged();
+    partial void Onid_paquete_excursionChanging(int value);
+    partial void Onid_paquete_excursionChanged();
+    partial void Onid_paqueteChanging(int value);
+    partial void Onid_paqueteChanged();
     partial void Onid_excursionChanging(int value);
     partial void Onid_excursionChanged();
-    partial void Onfecha_reservaChanging(System.Nullable<System.DateTime> value);
-    partial void Onfecha_reservaChanged();
     #endregion
 		
-		public reservas_excursione()
+		public paquetes_excursione()
 		{
-			this._cliente = default(EntityRef<cliente>);
-			this._excursione = default(EntityRef<excursione>);
+			this._excursiones = default(EntityRef<excursiones>);
+			this._paquete = default(EntityRef<paquete>);
 			OnCreated();
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id_reserva_excursion", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
-		public int id_reserva_excursion
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id_paquete_excursion", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int id_paquete_excursion
 		{
 			get
 			{
-				return this._id_reserva_excursion;
+				return this._id_paquete_excursion;
 			}
 			set
 			{
-				if ((this._id_reserva_excursion != value))
+				if ((this._id_paquete_excursion != value))
 				{
-					this.Onid_reserva_excursionChanging(value);
+					this.Onid_paquete_excursionChanging(value);
 					this.SendPropertyChanging();
-					this._id_reserva_excursion = value;
-					this.SendPropertyChanged("id_reserva_excursion");
-					this.Onid_reserva_excursionChanged();
+					this._id_paquete_excursion = value;
+					this.SendPropertyChanged("id_paquete_excursion");
+					this.Onid_paquete_excursionChanged();
 				}
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id_cliente", DbType="Int NOT NULL")]
-		public int id_cliente
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id_paquete", DbType="Int NOT NULL")]
+		public int id_paquete
 		{
 			get
 			{
-				return this._id_cliente;
+				return this._id_paquete;
 			}
 			set
 			{
-				if ((this._id_cliente != value))
+				if ((this._id_paquete != value))
 				{
-					if (this._cliente.HasLoadedOrAssignedValue)
+					if (this._paquete.HasLoadedOrAssignedValue)
 					{
 						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
 					}
-					this.Onid_clienteChanging(value);
+					this.Onid_paqueteChanging(value);
 					this.SendPropertyChanging();
-					this._id_cliente = value;
-					this.SendPropertyChanged("id_cliente");
-					this.Onid_clienteChanged();
+					this._id_paquete = value;
+					this.SendPropertyChanged("id_paquete");
+					this.Onid_paqueteChanged();
 				}
 			}
 		}
@@ -2808,7 +2031,7 @@ namespace DataLayer
 			{
 				if ((this._id_excursion != value))
 				{
-					if (this._excursione.HasLoadedOrAssignedValue)
+					if (this._excursiones.HasLoadedOrAssignedValue)
 					{
 						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
 					}
@@ -2821,90 +2044,70 @@ namespace DataLayer
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_fecha_reserva", DbType="DateTime")]
-		public System.Nullable<System.DateTime> fecha_reserva
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="excursiones_paquetes_excursione", Storage="_excursiones", ThisKey="id_excursion", OtherKey="id_excursion", IsForeignKey=true)]
+		public excursiones excursiones
 		{
 			get
 			{
-				return this._fecha_reserva;
+				return this._excursiones.Entity;
 			}
 			set
 			{
-				if ((this._fecha_reserva != value))
-				{
-					this.Onfecha_reservaChanging(value);
-					this.SendPropertyChanging();
-					this._fecha_reserva = value;
-					this.SendPropertyChanged("fecha_reserva");
-					this.Onfecha_reservaChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="cliente_reservas_excursione", Storage="_cliente", ThisKey="id_cliente", OtherKey="id_cliente", IsForeignKey=true)]
-		public cliente cliente
-		{
-			get
-			{
-				return this._cliente.Entity;
-			}
-			set
-			{
-				cliente previousValue = this._cliente.Entity;
+				excursiones previousValue = this._excursiones.Entity;
 				if (((previousValue != value) 
-							|| (this._cliente.HasLoadedOrAssignedValue == false)))
+							|| (this._excursiones.HasLoadedOrAssignedValue == false)))
 				{
 					this.SendPropertyChanging();
 					if ((previousValue != null))
 					{
-						this._cliente.Entity = null;
-						previousValue.reservas_excursiones.Remove(this);
+						this._excursiones.Entity = null;
+						previousValue.paquetes_excursiones.Remove(this);
 					}
-					this._cliente.Entity = value;
+					this._excursiones.Entity = value;
 					if ((value != null))
 					{
-						value.reservas_excursiones.Add(this);
-						this._id_cliente = value.id_cliente;
-					}
-					else
-					{
-						this._id_cliente = default(int);
-					}
-					this.SendPropertyChanged("cliente");
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="excursione_reservas_excursione", Storage="_excursione", ThisKey="id_excursion", OtherKey="id_excursion", IsForeignKey=true)]
-		public excursione excursione
-		{
-			get
-			{
-				return this._excursione.Entity;
-			}
-			set
-			{
-				excursione previousValue = this._excursione.Entity;
-				if (((previousValue != value) 
-							|| (this._excursione.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._excursione.Entity = null;
-						previousValue.reservas_excursiones.Remove(this);
-					}
-					this._excursione.Entity = value;
-					if ((value != null))
-					{
-						value.reservas_excursiones.Add(this);
+						value.paquetes_excursiones.Add(this);
 						this._id_excursion = value.id_excursion;
 					}
 					else
 					{
 						this._id_excursion = default(int);
 					}
-					this.SendPropertyChanged("excursione");
+					this.SendPropertyChanged("excursiones");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="paquete_paquetes_excursione", Storage="_paquete", ThisKey="id_paquete", OtherKey="id_paquete", IsForeignKey=true)]
+		public paquete paquete
+		{
+			get
+			{
+				return this._paquete.Entity;
+			}
+			set
+			{
+				paquete previousValue = this._paquete.Entity;
+				if (((previousValue != value) 
+							|| (this._paquete.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._paquete.Entity = null;
+						previousValue.paquetes_excursiones.Remove(this);
+					}
+					this._paquete.Entity = value;
+					if ((value != null))
+					{
+						value.paquetes_excursiones.Add(this);
+						this._id_paquete = value.id_paquete;
+					}
+					else
+					{
+						this._id_paquete = default(int);
+					}
+					this.SendPropertyChanged("paquete");
 				}
 			}
 		}
