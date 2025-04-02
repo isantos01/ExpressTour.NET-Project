@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DTO\DashboardModelView.cs" />
     <Compile Include="DTO\ClientModelView.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

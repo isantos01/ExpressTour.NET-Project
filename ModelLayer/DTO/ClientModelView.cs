@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ModelLayer.DTO
 {
-    class ClientModelView
+    public class ClientModelView
     {
         public int IdCliente { get; set; }
         public string Nombre { get; set; }
