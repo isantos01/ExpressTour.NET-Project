@@ -9,16 +9,6 @@ namespace ModelLayer.DTO
 {
     public class DashboardModelView
     {
-        public string Title { get; set; }
-        public string Welcome { get; set; }
-
-        public DashboardModelView()
-        {
-        }
-        public DashboardModelView(string title, string welcome)
-        {
-            Title = title;
-            Welcome = welcome;
-        }
+        public List<TableInfoModel> Tables { get; set; }
     }
 }

@@ -8,7 +8,7 @@ namespace ModelLayer.DTO
 {
     public class ClientModelView
     {
-        public int IdCliente { get; set; }
+        public int Id_Cliente { get; set; }
         public string Nombre { get; set; }
         public string Correo { get; set; }
         public string Telefono { get; set; }
