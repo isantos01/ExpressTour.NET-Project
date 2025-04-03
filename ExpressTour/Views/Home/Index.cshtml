@@ -1,8 +1,8 @@
 ﻿@model ModelLayer.DTO.DashboardModelView
 @{
-    ViewData["Title"] = Model.Title;
+    ViewBag.Title = Model.Title;
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
 <!-- Masthead (Encabezado)-->
 <header class="masthead" id="home">
     <div class="container">
