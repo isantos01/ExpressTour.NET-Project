@@ -1,29 +1,30 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Web.Mvc;
+using DataLayer;
 using ModelLayer.DTO;
 
 namespace ExpressTour.Controllers
 {
-	public class DashboardController : Controller
-	{
-        //Obtenemos Dashboard
+    public class DashboardController : Controller
+    {
+        private readonly ExpressTourDataContext _db = new ExpressTourDataContext();
+
         public ActionResult Index()
         {
-            //Simula la lista de tablas
-            var tables = new List<TableInfoModel> {
-            new TableInfoModel { TableName = "clientes", DisplayName = "Clientes" },
-            new TableInfoModel { TableName = "paquetes", DisplayName = "Paquetes" },
-            new TableInfoModel { TableName = "reservas", DisplayName = "Reservas"},
-            new TableInfoModel { TableName = "excursiones", DisplayName = "Excursiones"},
-            new TableInfoModel { TableName = "transporte", DisplayName = "Transporte"},
-            new TableInfoModel { TableName = "proveedores", DisplayName = "Proveedores"},
-            new TableInfoModel { TableName = "facturas", DisplayName = "Facturas"}
-            };
-            var model = new DashboardModelView
+            // Obtener las tablas dinámicamente
+            var tables = _db.Mapping.GetTables()
+                            .Select(t => t.TableName.Split('.').Last()) // Para quitar el schema si existe
+                            .ToList();
+
+
+            // Si no hay tablas, devolver una lista vacía
+            var viewModel = new DashboardViewModel
             {
                 Tables = tables
             };
-            return View(model);
+
+            return View(viewModel);
         }
-	}
+    }
 }

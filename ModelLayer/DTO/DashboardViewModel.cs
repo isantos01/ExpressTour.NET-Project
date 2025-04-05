@@ -7,8 +7,9 @@ using System.Threading.Tasks;
 
 namespace ModelLayer.DTO
 {
-    public class DashboardModelView
+    public class DashboardViewModel
     {
-        public List<TableInfoModel> Tables { get; set; }
+        public List<string> Tables { get; set; } = new List<string>(); // Evita nulos
     }
 }
+

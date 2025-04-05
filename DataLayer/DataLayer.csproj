@@ -73,12 +73,6 @@
     <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ModelLayer\ModelLayer.csproj">
-      <Project>{d43e1d5e-f8cc-41f7-bcd9-482dfda2df20}</Project>
-      <Name>ModelLayer</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

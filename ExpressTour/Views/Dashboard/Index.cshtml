@@ -1,0 +1,36 @@
+﻿@model ModelLayer.DTO.DashboardViewModel
+
+@{
+    ViewBag.Title = "Dashboard";
+}
+
+<section class="page-section bg-light" id="portfolio">
+    <div class="container mt-5">
+        <div class="text-center">
+            <h2 class="section-heading text-uppercase">Dashboard de Administrador</h2>
+        </div>
+        <div class="row">
+            @if (Model.Tables != null && Model.Tables.Any())
+            {
+                foreach (var tableName in Model.Tables)
+                {
+                    <div class="col-md-4 col-sm-6 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">@tableName</h5>
+                                <p class="card-text">Gestiona los registros de la tabla @tableName.</p>
+                                <a href="@Url.Action("Index", tableName)" class="btn btn-primary">Administrar</a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="alert alert-warning">No se encontraron tablas.</div>
+            }
+        </div>
+    </div>
+</section>
+
+
