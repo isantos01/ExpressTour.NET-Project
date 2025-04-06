@@ -66,6 +66,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DTO\UserViewModel.cs" />
     <Compile Include="DTO\ClienteViewModel.cs" />
     <Compile Include="DTO\DashboardViewModel.cs" />
     <Compile Include="DTO\TableInfoModel.cs" />

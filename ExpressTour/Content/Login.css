@@ -1,0 +1,49 @@
+﻿/* login.css */
+
+
+.bg-custom {
+    background-color: #ffc800 !important;
+}
+
+.login-card {
+    border-radius: 1rem;
+}
+
+.login-img {
+    border-radius: 1rem 0 0 1rem;
+}
+
+.icon-custom {
+    color: #ffc800;
+}
+
+.letter-spacing-1 {
+    letter-spacing: 1px;
+}
+
+.text-custom {
+    color: #393f81;
+}
+
+/* Cambiar fuente del botón */
+.btn-custom {
+    font-family: 'Roboto', sans-serif; /* Cambia 'Roboto' por la fuente que prefieras */
+    font-size: 1.1rem; /* Ajusta el tamaño de fuente */
+}
+
+/* Cambiar el largo (ancho) del botón */
+.btn-custom {
+    width: 100%; /* O un ancho específico, por ejemplo: width: 250px; */
+    max-width: 300px; /* Opcional: limitar el ancho máximo */
+}
+
+/* Cambiar el color del borde para que sea el mismo que el fondo (o el color deseado) */
+.btn-custom {
+    border-color: #ffc800 !important; /* Usa el mismo color que desees, en este caso #ffc800 */
+}
+
+    /* Si deseas que el botón tenga mayor estilo, puedes agregar transición, hover, etc. */
+    .btn-custom:hover {
+        background-color: #d9aa00 !important; /* Ejemplo para el hover */
+        border-color: #d9aa00 !important;
+    }
