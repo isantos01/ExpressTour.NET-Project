@@ -170,6 +170,7 @@
     <Content Include="Content\Image\img\team\2.jpg" />
     <Content Include="Content\Image\img\team\El mejor.jpg" />
     <Content Include="Content\Image\img\team\Rafael.jpeg" />
+    <Content Include="Content\Dashboard.css" />
     <Content Include="Content\Login.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
@@ -209,6 +210,7 @@
     <Content Include="Views\Dashboard\Index.cshtml" />
     <Content Include="Views\Login\Index.cshtml" />
     <Content Include="Views\Shared\_LoginLayout.cshtml" />
+    <Content Include="Views\Shared\_DashboardLayout.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
