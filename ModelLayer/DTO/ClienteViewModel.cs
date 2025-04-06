@@ -5,7 +5,7 @@ using System.Web.Mvc;
 using DataLayer;
 using ModelLayer;
 
-namespace ExpressTour.Models
+namespace ModelLayer.DTO
 {
     public class ClientViewModel
     {
