@@ -1,6 +1,5 @@
 ﻿/* login.css */
 
-
 .bg-custom {
     background-color: #ffc800 !important;
 }
@@ -25,25 +24,22 @@
     color: #393f81;
 }
 
-/* Cambiar fuente del botón */
 .btn-custom {
-    font-family: 'Roboto', sans-serif; /* Cambia 'Roboto' por la fuente que prefieras */
-    font-size: 1.1rem; /* Ajusta el tamaño de fuente */
+    font-family: "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    font-size: 1.2rem;
+    width: 100%;
+    max-width: 550px;
+    background-color: #ffc800 !important;
+    border-color: #ffc800 !important;
+    color: white;
+    font-weight: 700;
+    padding: 12px 24px;
+    margin: 0 auto;
+    display: block;
 }
 
-/* Cambiar el largo (ancho) del botón */
-.btn-custom {
-    width: 100%; /* O un ancho específico, por ejemplo: width: 250px; */
-    max-width: 300px; /* Opcional: limitar el ancho máximo */
+.btn-custom:hover {
+    background-color: #e6b800 !important;
+    border-color: #e6b800 !important;
+    color: white;
 }
-
-/* Cambiar el color del borde para que sea el mismo que el fondo (o el color deseado) */
-.btn-custom {
-    border-color: #ffc800 !important; /* Usa el mismo color que desees, en este caso #ffc800 */
-}
-
-    /* Si deseas que el botón tenga mayor estilo, puedes agregar transición, hover, etc. */
-    .btn-custom:hover {
-        background-color: #d9aa00 !important; /* Ejemplo para el hover */
-        border-color: #d9aa00 !important;
-    }
