@@ -103,7 +103,53 @@ namespace ExpressTour.Controllers
             // Si hay errores, devuelve el PartialView con el modelo para corregirlos
             return PartialView("_EditClient", model);
         }
+        [HttpPost]
+        public ActionResult Delete(int id)
+        {
+            bool eliminado = _clienteService.DeleteClientes(id);
 
+            if (!eliminado)
+            {
+                // Si no se puede eliminar porque tiene relaciones, redirige a una acción de confirmación
+                TempData["Warning"] = "El cliente tiene registros asociados. Eliminar este cliente eliminará también sus reservas y facturas. ¿Desea proceder?";
+                return RedirectToAction("ConfirmDelete", new { id = id });
+            }
+            else
+            {
+                TempData["Success"] = "Cliente eliminado correctamente.";
+            }
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public ActionResult ConfirmDelete(int id)
+        {
+            // Obtiene el cliente para mostrar sus datos
+            var clienteEntity = _clienteService.ObtenerClientePorId(id);
+            if (clienteEntity == null)
+            {
+                return HttpNotFound();
+            }
+            // Mapear a ClientViewModel
+            var model = new ClientViewModel
+            {
+                Id = clienteEntity.id_cliente,
+                Nombre = clienteEntity.nombre,
+                Correo = clienteEntity.correo,
+                Telefono = clienteEntity.telefono,
+                Direccion = clienteEntity.direccion
+            };
+            return View(model); // Vista de confirmación
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteComplete(int id)
+        {
+            _clienteService.EliminarClienteConReservas(id);
+            TempData["Success"] = "Cliente y sus registros asociados fueron eliminados.";
+            return RedirectToAction("Index");
+        }
 
         protected override void Dispose(bool disposing)
         {

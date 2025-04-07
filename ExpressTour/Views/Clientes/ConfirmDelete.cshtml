@@ -1,0 +1,32 @@
+﻿@model ModelLayer.DTO.ClientViewModel
+
+@{
+    Layout = "~/Views/Shared/_ClientesLayout.cshtml";
+    ViewBag.Title = "Confirmar Eliminación de Cliente";
+}
+
+<h2 class="mt-4">Confirmar Eliminación</h2>
+
+<div class="alert alert-warning mt-3">
+    <strong>Advertencia:</strong> Estás a punto de eliminar el cliente <strong>@Model.Nombre</strong>. Esta acción también eliminará sus reservas, facturas u otros registros asociados. ¿Deseas continuar?
+</div>
+
+<div class="card mt-4">
+    <div class="card-body">
+        <p><strong>Nombre:</strong> @Model.Nombre</p>
+        <p><strong>Correo:</strong> @Model.Correo</p>
+        <p><strong>Teléfono:</strong> @Model.Telefono</p>
+        <p><strong>Dirección:</strong> @Model.Direccion</p>
+    </div>
+</div>
+
+@using (Html.BeginForm("DeleteComplete", "Clientes", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.Id)
+
+    <div class="mt-4 d-flex justify-content-between">
+        <a href="@Url.Action("Index", "Clientes")" class="btn btn-secondary">Cancelar</a>
+        <button type="submit" class="btn btn-danger">Eliminar definitivamente</button>
+    </div>
+}

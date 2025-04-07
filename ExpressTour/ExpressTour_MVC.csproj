@@ -214,6 +214,7 @@
     <Content Include="Views\Clientes\Index.cshtml" />
     <Content Include="Views\Shared\_ClientesLayout.cshtml" />
     <Content Include="Views\Clientes\_EditClient.cshtml" />
+    <Content Include="Views\Clientes\ConfirmDelete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

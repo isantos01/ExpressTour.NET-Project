@@ -32,10 +32,17 @@ namespace BusinessLayer.Services
         {
             _clienteRepository.UpdateCliente(cliente);
         }
-
-        public void EliminarCliente(int id)
+        public bool DeleteClientes(int id)
         {
-            _clienteRepository.DeleteCliente(id);
+            return _clienteRepository.DeleteCliente(id);
         }
+
+        public void EliminarClienteConReservas(int id)
+        {
+            _clienteRepository.DeleteClienteCascade(id);
+        }
+
+
+
     }
 }

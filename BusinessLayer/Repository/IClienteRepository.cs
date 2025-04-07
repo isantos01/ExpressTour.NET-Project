@@ -14,6 +14,8 @@ namespace BusinessLayer.Repository
         cliente GetClienteById(int id);
         void AddCliente(cliente cliente);
         void UpdateCliente(cliente cliente);
-        void DeleteCliente(int id);
+        bool DeleteCliente(int id);
+        void DeleteClienteCascade(int id);
+
     }
 }

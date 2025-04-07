@@ -34,7 +34,7 @@
                     <td>@cliente.Direccion</td>
                     <td>
                         <a href="@Url.Action("Edit", "Clientes")" data-id="@cliente.Id" class="btn btn-sm btn-primary editClientBtn">Editar</a>
-                        <a href="@Url.Action("Delete", "Clientes", new { id = cliente.Id })" class="btn btn-sm btn-danger">Eliminar</a>
+                        <a href="#" data-id="@cliente.Id" data-nombre="@cliente.Nombre" class="btn btn-sm btn-danger deleteClientBtn">Eliminar</a>
                     </td>
                 </tr>
             }
@@ -88,6 +88,73 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="deleteClientModal" tabindex="-1" role="dialog" aria-labelledby="deleteClientModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="deleteClientModalLabel">Confirmar Eliminación</h5>
+                <button type="button" class="close text-white" data-bs-dismiss="modal" aria-label="Cerrar">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                ¿Estás seguro de que deseas eliminar al cliente <strong id="clienteAEliminar"></strong>?
+            </div>
+            <div class="modal-footer">
+                <form id="deleteClientForm" method="post" action="/Clientes/Delete">
+                    <input type="hidden" id="deleteClientId" name="id" />
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="deleteClientModal" tabindex="-1" role="dialog" aria-labelledby="deleteClientModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="deleteClientModalLabel">Confirmar Eliminación</h5>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Cerrar">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                ¿Estás seguro de que deseas eliminar al cliente <strong id="clienteAEliminar"></strong>?
+            </div>
+            <div class="modal-footer">
+                <form id="deleteClientForm" method="post" action="/Clientes/Delete">
+                    <input type="hidden" id="deleteClientId" name="id" />
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal para Eliminar Cliente -->
+<div class="modal fade" id="deleteClientModal" tabindex="-1" role="dialog" aria-labelledby="deleteClientModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="deleteClientModalLabel">Confirmar Eliminación</h5>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Cerrar">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                ¿Estás seguro de que deseas eliminar al cliente <strong id="clienteAEliminar"></strong>?
+            </div>
+            <div class="modal-footer">
+                <form id="deleteClientForm" method="post" action="@Url.Action("Delete", "Clientes")">
+                    <input type="hidden" id="deleteClientId" name="id" />
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 @section Scripts {
     <script>
         $(document).ready(function(){
@@ -103,5 +170,26 @@
             });
         });
     </script>
+    <script>
+        $(document).ready(function () {
+            $(".deleteClientBtn").click(function (e) {
+                e.preventDefault(); // Evita que redireccione
+
+                var clientId = $(this).data("id");
+                var clientName = $(this).data("nombre");
+
+                // Inserta los datos en el modal
+                $("#deleteClientId").val(clientId);
+                $("#clienteAEliminar").text(clientName);
+
+                // Muestra el modal
+                $("#deleteClientModal").modal("show");
+            });
+        });
+    </script>
+
+
 }
+
+
 
