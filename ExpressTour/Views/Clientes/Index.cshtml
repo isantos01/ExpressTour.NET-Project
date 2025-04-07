@@ -2,10 +2,16 @@
 @{
     Layout = "~/Views/Shared/_ClientesLayout.cshtml";
     ViewBag.Title = "Listado de Clientes";
+
 }
 
 <div class="container mt-5">
     <h2 class="text-center mb-4">Listado de Clientes</h2>
+    <div class="text-center mb-4">
+        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createClientModal">
+            Agregar Cliente
+        </button>
+    </div>
     <table class="table table-striped">
         <thead>
             <tr>
@@ -27,14 +33,75 @@
                     <td>@cliente.Telefono</td>
                     <td>@cliente.Direccion</td>
                     <td>
-                        <a href="@Url.Action("Edit", "Clientes", new { id = cliente.Id })" class="btn btn-sm btn-primary">Editar</a>
+                        <a href="@Url.Action("Edit", "Clientes")" data-id="@cliente.Id" class="btn btn-sm btn-primary editClientBtn">Editar</a>
                         <a href="@Url.Action("Delete", "Clientes", new { id = cliente.Id })" class="btn btn-sm btn-danger">Eliminar</a>
                     </td>
                 </tr>
             }
         </tbody>
     </table>
-    <div class="text-center">
-        <a href="@Url.Action("Create", "Clientes")" class="btn btn-success">Agregar Cliente</a>
+</div>
+<!-- Modal para Agregar Cliente -->
+<div class="modal fade" id="createClientModal" tabindex="-1" aria-labelledby="createClientModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createClientModalLabel">Agregar Cliente</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                @using (Html.BeginForm("Create", "Clientes", FormMethod.Post, new { @id = "createClientForm" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="mb-3">
+                        <label for="Nombre" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="Nombre" name="Nombre" placeholder="Ingresa el nombre" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="Correo" class="form-label">Correo</label>
+                        <input type="email" class="form-control" id="Correo" name="Correo" placeholder="Ingresa el correo" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="Telefono" class="form-label">Teléfono</label>
+                        <input type="text" class="form-control" id="Telefono" name="Telefono" placeholder="Ingresa el teléfono" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="Direccion" class="form-label">Dirección</label>
+                        <input type="text" class="form-control" id="Direccion" name="Direccion" placeholder="Ingresa la dirección" required />
+                    </div>
+                    <!-- El botón de submit se incluirá en el footer del modal -->
+                }
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <!-- El botón "Guardar" envía el formulario -->
+                <button type="submit" form="createClientForm" class="btn btn-success">Guardar</button>
+            </div>
+        </div>
     </div>
 </div>
+<!-- Modal para Editar Cliente -->
+<div class="modal fade" id="editClientModal" tabindex="-1" aria-labelledby="editClientModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="editClientModalContent">
+            <!-- Se cargará el PartialView _EditClient.cshtml aquí -->
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        $(document).ready(function(){
+            $(".editClientBtn").click(function(e){
+                e.preventDefault();
+                var clientId = $(this).data("id");
+                $.get('@Url.Action("Edit", "Clientes")', { id: clientId }, function(data){
+                    $("#editClientModalContent").html(data);
+                    $("#editClientModal").modal("show");
+                }).fail(function(xhr, status, error) {
+                    console.error("Error en la llamada AJAX:", status, error);
+                });
+            });
+        });
+    </script>
+}
+

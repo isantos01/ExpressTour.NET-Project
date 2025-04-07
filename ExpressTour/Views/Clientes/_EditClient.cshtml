@@ -1,0 +1,34 @@
+﻿@model ModelLayer.DTO.ClientViewModel
+
+
+<div class="modal-header">
+    <h5 class="modal-title" id="editClientModalLabel">Editar Cliente</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+</div>
+<div class="modal-body">
+    @using (Html.BeginForm("Edit", "Clientes", FormMethod.Post, new { @id = "editClientForm" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(m => m.Id)
+        <div class="mb-3">
+            @Html.LabelFor(m => m.Nombre, new { @class = "form-label" })
+            @Html.TextBoxFor(m => m.Nombre, new { @class = "form-control" })
+        </div>
+        <div class="mb-3">
+            @Html.LabelFor(m => m.Correo, new { @class = "form-label" })
+            @Html.TextBoxFor(m => m.Correo, new { @class = "form-control" })
+        </div>
+        <div class="mb-3">
+            @Html.LabelFor(m => m.Telefono, new { @class = "form-label" })
+            @Html.TextBoxFor(m => m.Telefono, new { @class = "form-control" })
+        </div>
+        <div class="mb-3">
+            @Html.LabelFor(m => m.Direccion, new { @class = "form-label" })
+            @Html.TextBoxFor(m => m.Direccion, new { @class = "form-control" })
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-primary">Guardar cambios</button>
+        </div>
+    }
+</div>

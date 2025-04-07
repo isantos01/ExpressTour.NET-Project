@@ -12538,6 +12538,10 @@ p {
             }
 }
 
+.bg-custom {
+    background-color: #143426 !important;
+}
+
 header.masthead {
     padding-top: 10.5rem;
     padding-bottom: 6rem;
@@ -12549,6 +12553,8 @@ header.masthead {
     background-position: center center;
     background-size: cover;
 }
+
+
 
     header.masthead .masthead-subheading {
         font-size: 1.5rem;

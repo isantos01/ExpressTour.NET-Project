@@ -213,6 +213,7 @@
     <Content Include="Views\Shared\_DashboardLayout.cshtml" />
     <Content Include="Views\Clientes\Index.cshtml" />
     <Content Include="Views\Shared\_ClientesLayout.cshtml" />
+    <Content Include="Views\Clientes\_EditClient.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

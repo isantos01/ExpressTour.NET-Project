@@ -1,8 +1,9 @@
 ﻿/* login.css */
 
 .bg-custom {
-    background-color: #ffc800 !important;
+    background-color: #0a2318 !important;
 }
+
 
 .login-card {
     border-radius: 1rem;
@@ -38,8 +39,10 @@
     display: block;
 }
 
-.btn-custom:hover {
-    background-color: #e6b800 !important;
-    border-color: #e6b800 !important;
-    color: white;
-}
+    .btn-custom:hover {
+        background-color: #e6b800 !important;
+        border-color: #e6b800 !important;
+        color: white;
+    }
+
+ 
