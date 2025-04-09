@@ -50,7 +50,10 @@
     <Compile Include="Repository\ClienteRepository.cs" />
     <Compile Include="Repository\IClienteRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repository\ITransporteRepository.cs" />
+    <Compile Include="Repository\TransporteRepository.cs" />
     <Compile Include="Services\ClienteService.cs" />
+    <Compile Include="Services\TransporteService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DataLayer\DataLayer.csproj">

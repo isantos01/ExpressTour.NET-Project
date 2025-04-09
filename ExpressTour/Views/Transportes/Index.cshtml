@@ -1,0 +1,172 @@
+﻿@model IEnumerable<ModelLayer.DTO.TransporteViewModel>
+@{
+    Layout = "~/Views/Shared/_ClientesLayout.cshtml"; // Puedes crear uno específico como _TransporteLayout si deseas
+    ViewBag.Title = "Listado de Transportes";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Listado de Transportes</h2>
+
+    <div class="text-center mb-4">
+        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createTransporteModal">
+            Agregar Transporte
+        </button>
+    </div>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Tipo</th>
+                <th>Capacidad</th>
+                <th>ID Proveedor</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var transporte in Model)
+            {
+                <tr>
+                    <td>@transporte.Id</td>
+                    <td>@transporte.Tipo</td>
+                    <td>@transporte.Capacidad</td>
+                    <td>@transporte.IdProveedor</td>
+                    <td>
+                        <a href="@Url.Action("Edit", "Transportes")" data-id="@transporte.Id" class="btn btn-sm btn-primary editTransporteBtn">Editar</a>
+                        <a href="#" data-id="@transporte.Id" data-tipo="@transporte.Tipo" class="btn btn-sm btn-danger deleteTransporteBtn">Eliminar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div class="text-center mb-4">
+        <div class="text-center mb-4">
+            <a href="@Url.Action("Index", "Dashboard")" class="btn btn-secondary btn-sm">
+                Home Dashboard
+            </a>
+        </div>
+    </div>
+</div>
+<!-- Modal: Crear Transporte -->
+<div class="modal fade" id="createTransporteModal" tabindex="-1" aria-labelledby="createTransporteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createTransporteModalLabel">Agregar Transporte</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                @using (Html.BeginForm("Create", "Transportes", FormMethod.Post, new { @id = "createTransporteForm" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="mb-3">
+                        <label for="Tipo" class="form-label">Tipo</label>
+                        <input type="text" class="form-control" id="Tipo" name="Tipo" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="Capacidad" class="form-label">Capacidad</label>
+                        <input type="number" class="form-control" id="Capacidad" name="Capacidad" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="IdProveedor" class="form-label">ID Proveedor</label>
+                        <input type="number" class="form-control" id="IdProveedor" name="IdProveedor" required />
+                    </div>
+                }
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="submit" form="createTransporteForm" class="btn btn-success">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal: Editar Transporte (se cargará por AJAX) -->
+<div class="modal fade" id="editTransporteModal" tabindex="-1" aria-labelledby="editTransporteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="editTransporteModalContent">
+            <!-- Aquí se cargará el partial view _EditTransporte.cshtml -->
+        </div>
+    </div>
+</div>
+<!-- Modal: Agregar Transporte -->
+<div class="modal fade" id="createTransporteModal" tabindex="-1" aria-labelledby="createTransporteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createTransporteModalLabel">Agregar Transporte</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                @using (Html.BeginForm("Create", "Transportes", FormMethod.Post, new { id = "createTransporteForm" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="mb-3">
+                        <label for="Tipo" class="form-label">Tipo</label>
+                        <input type="text" class="form-control" id="Tipo" name="Tipo" required placeholder="Ingrese el tipo" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="Capacidad" class="form-label">Capacidad</label>
+                        <input type="number" class="form-control" id="Capacidad" name="Capacidad" required placeholder="Ingrese la capacidad" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="IdProveedor" class="form-label">ID Proveedor</label>
+                        <input type="number" class="form-control" id="IdProveedor" name="IdProveedor" required placeholder="Ingrese el ID del proveedor" />
+                    </div>
+                }
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <!-- Botón guardar: Envía el formulario "createTransporteForm" -->
+                <button type="submit" form="createTransporteForm" class="btn btn-success">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal: Eliminar Transporte -->
+<div class="modal fade" id="deleteTransporteModal" tabindex="-1" aria-labelledby="deleteTransporteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="deleteTransporteModalLabel">Confirmar Eliminación</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                ¿Estás seguro de que deseas eliminar el transporte <strong id="transporteAEliminar"></strong>?
+            </div>
+            <div class="modal-footer">
+                <form id="deleteTransporteForm" method="post" action="/Transportes/Delete">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" id="deleteTransporteId" name="id" />
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $(".editTransporteBtn").click(function (e) {
+                e.preventDefault();
+                var transporteId = $(this).data("id");
+                $.get('@Url.Action("Edit", "Transportes")', { id: transporteId }, function (data) {
+                    $("#editTransporteModalContent").html(data);
+                    $("#editTransporteModal").modal("show");
+                }).fail(function (xhr, status, error) {
+                    console.error("Error al cargar el formulario de edición:", status, error);
+                });
+            });
+
+            $(".deleteTransporteBtn").click(function (e) {
+                e.preventDefault();
+                var transporteId = $(this).data("id");
+                var transporteTipo = $(this).data("tipo");
+
+                $("#deleteTransporteId").val(transporteId);
+                $("#transporteAEliminar").text(transporteTipo);
+                $("#deleteTransporteModal").modal("show");
+            });
+        });
+    </script>
+}

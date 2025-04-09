@@ -125,6 +125,7 @@
     <Compile Include="Controllers\DashboardController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
+    <Compile Include="Controllers\TransportesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -147,6 +148,7 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\bootstrap.rtl.css" />
     <Content Include="Content\bootstrap.rtl.min.css" />
+    <Content Include="Content\ConfirmDelete.css" />
     <Content Include="Content\Image\favicon.ico" />
     <Content Include="Content\Image\img\about\1.jpg" />
     <Content Include="Content\Image\img\about\2.jpg" />
@@ -215,6 +217,10 @@
     <Content Include="Views\Shared\_ClientesLayout.cshtml" />
     <Content Include="Views\Clientes\_EditClient.cshtml" />
     <Content Include="Views\Clientes\ConfirmDelete.cshtml" />
+    <Content Include="Views\Transportes\Index.cshtml" />
+    <Content Include="Views\Transportes\_EditTransporte.cshtml" />
+    <Content Include="Views\Transportes\_CreateTransporte.cshtml" />
+    <Content Include="Views\Transportes\ConfirmDelete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

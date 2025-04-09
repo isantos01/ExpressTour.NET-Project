@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Database Name="ExpressTour" Class="DataClasses1DataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="ExpressTour" Class="ExpressTourDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
   <Connection Mode="AppSettings" ConnectionString="Data Source=.\sqlexpress;Initial Catalog=ExpressTour;Integrated Security=True;Trust Server Certificate=True" SettingsObjectName="DataLayer.Properties.Settings" SettingsPropertyName="ExpressTourConnectionString" Provider="System.Data.SqlClient" />
   <Table Name="dbo.clientes" Member="clientes">
     <Type Name="cliente">
@@ -11,24 +11,23 @@
       <Association Name="cliente_reserva" Member="reservas" ThisKey="id_cliente" OtherKey="id_cliente" Type="reserva" />
     </Type>
   </Table>
-  <Table Name="dbo.transporte" Member="transportes">
-    <Type Name="transporte">
-      <Column Name="id_transporte" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="tipo" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
-      <Column Name="capacidad" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="id_proveedor" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Association Name="transporte_paquete" Member="paquetes" ThisKey="id_transporte" OtherKey="id_transporte" Type="paquete" />
-      <Association Name="proveedore_transporte" Member="proveedore" ThisKey="id_proveedor" OtherKey="id_proveedor" Type="proveedore" IsForeignKey="true" />
+  <Table Name="dbo.Usuarios" Member="Usuarios">
+    <Type Name="Usuario">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="NombreUsuario" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="Contrasena" Type="System.String" DbType="NVarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="Rol" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="FechaCreacion" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
     </Type>
   </Table>
   <Table Name="dbo.excursiones" Member="excursiones">
-    <Type Name="excursiones">
+    <Type Name="excursione">
       <Column Name="id_excursion" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="nombre" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
       <Column Name="descripcion" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
       <Column Name="precio" Type="System.Decimal" DbType="Decimal(10,2) NOT NULL" CanBeNull="false" />
       <Column Name="capacidad" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Association Name="excursiones_paquetes_excursione" Member="paquetes_excursiones" ThisKey="id_excursion" OtherKey="id_excursion" Type="paquetes_excursione" />
+      <Association Name="excursione_paquetes_excursione" Member="paquetes_excursiones" ThisKey="id_excursion" OtherKey="id_excursion" Type="paquetes_excursione" />
     </Type>
   </Table>
   <Table Name="dbo.facturas" Member="facturas">
@@ -61,9 +60,18 @@
       <Column Name="duracion_dias" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="id_transporte" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Association Name="paquete_opiniones_cliente" Member="opiniones_clientes" ThisKey="id_paquete" OtherKey="id_paquete" Type="opiniones_cliente" />
-      <Association Name="paquete_reserva" Member="reservas" ThisKey="id_paquete" OtherKey="id_paquete" Type="reserva" />
       <Association Name="paquete_paquetes_excursione" Member="paquetes_excursiones" ThisKey="id_paquete" OtherKey="id_paquete" Type="paquetes_excursione" />
+      <Association Name="paquete_reserva" Member="reservas" ThisKey="id_paquete" OtherKey="id_paquete" Type="reserva" />
       <Association Name="transporte_paquete" Member="transporte" ThisKey="id_transporte" OtherKey="id_transporte" Type="transporte" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.paquetes_excursiones" Member="paquetes_excursiones">
+    <Type Name="paquetes_excursione">
+      <Column Name="id_paquete_excursion" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="id_paquete" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="id_excursion" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="excursione_paquetes_excursione" Member="excursione" ThisKey="id_excursion" OtherKey="id_excursion" Type="excursione" IsForeignKey="true" />
+      <Association Name="paquete_paquetes_excursione" Member="paquete" ThisKey="id_paquete" OtherKey="id_paquete" Type="paquete" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.proveedores" Member="proveedores">
@@ -87,22 +95,14 @@
       <Association Name="paquete_reserva" Member="paquete" ThisKey="id_paquete" OtherKey="id_paquete" Type="paquete" IsForeignKey="true" />
     </Type>
   </Table>
-  <Table Name="dbo.paquetes_excursiones" Member="paquetes_excursiones">
-    <Type Name="paquetes_excursione">
-      <Column Name="id_paquete_excursion" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="id_paquete" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="id_excursion" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Association Name="excursiones_paquetes_excursione" Member="excursiones" ThisKey="id_excursion" OtherKey="id_excursion" Type="excursiones" IsForeignKey="true" />
-      <Association Name="paquete_paquetes_excursione" Member="paquete" ThisKey="id_paquete" OtherKey="id_paquete" Type="paquete" IsForeignKey="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.Usuarios" Member="Usuarios">
-    <Type Name="Usuario">
-      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="NombreUsuario" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
-      <Column Name="Contrasena" Type="System.String" DbType="NVarChar(255) NOT NULL" CanBeNull="false" />
-      <Column Name="Rol" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
-      <Column Name="FechaCreacion" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+  <Table Name="dbo.transportes" Member="transportes">
+    <Type Name="transporte">
+      <Column Name="id_transporte" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="tipo" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="capacidad" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="id_proveedor" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="transporte_paquete" Member="paquetes" ThisKey="id_transporte" OtherKey="id_transporte" Type="paquete" />
+      <Association Name="proveedore_transporte" Member="proveedore" ThisKey="id_proveedor" OtherKey="id_proveedor" Type="proveedore" IsForeignKey="true" />
     </Type>
   </Table>
 </Database>

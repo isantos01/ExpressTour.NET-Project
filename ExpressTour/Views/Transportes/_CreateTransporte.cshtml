@@ -1,0 +1,21 @@
+﻿@model ModelLayer.DTO.TransporteViewModel
+
+@using (Html.BeginForm("Create", "Transportes", FormMethod.Post, new { id = "createTransporteForm" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="mb-3">
+        @Html.LabelFor(m => m.Tipo, new { @class = "form-label" })
+        @Html.TextBoxFor(m => m.Tipo, new { @class = "form-control", placeholder = "Ingresa el tipo", required = "required" })
+    </div>
+    <div class="mb-3">
+        @Html.LabelFor(m => m.Capacidad, new { @class = "form-label" })
+        @Html.TextBoxFor(m => m.Capacidad, new { @class = "form-control", type = "number", placeholder = "Ingresa la capacidad", required = "required" })
+    </div>
+    <div class="mb-3">
+        @Html.LabelFor(m => m.IdProveedor, new { @class = "form-label" })
+        @Html.TextBoxFor(m => m.IdProveedor, new { @class = "form-control", type = "number", placeholder = "Ingresa el ID del proveedor", required = "required" })
+        @Html.ValidationMessageFor(model => model.IdProveedor, "", new { @class = "text-danger" })
+    </div>
+    <!-- Puedes incluir un lugar para mostrar los errores de validación aquí si lo deseas -->
+}
+

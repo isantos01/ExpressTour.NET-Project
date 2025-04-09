@@ -33,12 +33,12 @@ namespace DataLayer
     partial void Insertcliente(cliente instance);
     partial void Updatecliente(cliente instance);
     partial void Deletecliente(cliente instance);
-    partial void Inserttransporte(transporte instance);
-    partial void Updatetransporte(transporte instance);
-    partial void Deletetransporte(transporte instance);
-    partial void Insertexcursiones(excursiones instance);
-    partial void Updateexcursiones(excursiones instance);
-    partial void Deleteexcursiones(excursiones instance);
+    partial void InsertUsuario(Usuario instance);
+    partial void UpdateUsuario(Usuario instance);
+    partial void DeleteUsuario(Usuario instance);
+    partial void Insertexcursione(excursione instance);
+    partial void Updateexcursione(excursione instance);
+    partial void Deleteexcursione(excursione instance);
     partial void Insertfactura(factura instance);
     partial void Updatefactura(factura instance);
     partial void Deletefactura(factura instance);
@@ -48,18 +48,18 @@ namespace DataLayer
     partial void Insertpaquete(paquete instance);
     partial void Updatepaquete(paquete instance);
     partial void Deletepaquete(paquete instance);
+    partial void Insertpaquetes_excursione(paquetes_excursione instance);
+    partial void Updatepaquetes_excursione(paquetes_excursione instance);
+    partial void Deletepaquetes_excursione(paquetes_excursione instance);
     partial void Insertproveedore(proveedore instance);
     partial void Updateproveedore(proveedore instance);
     partial void Deleteproveedore(proveedore instance);
     partial void Insertreserva(reserva instance);
     partial void Updatereserva(reserva instance);
     partial void Deletereserva(reserva instance);
-    partial void Insertpaquetes_excursione(paquetes_excursione instance);
-    partial void Updatepaquetes_excursione(paquetes_excursione instance);
-    partial void Deletepaquetes_excursione(paquetes_excursione instance);
-    partial void InsertUsuario(Usuario instance);
-    partial void UpdateUsuario(Usuario instance);
-    partial void DeleteUsuario(Usuario instance);
+    partial void Inserttransporte(transporte instance);
+    partial void Updatetransporte(transporte instance);
+    partial void Deletetransporte(transporte instance);
     #endregion
 		
 		public ExpressTourDataContext() : 
@@ -100,19 +100,19 @@ namespace DataLayer
 			}
 		}
 		
-		public System.Data.Linq.Table<transporte> transportes
+		public System.Data.Linq.Table<Usuario> Usuarios
 		{
 			get
 			{
-				return this.GetTable<transporte>();
+				return this.GetTable<Usuario>();
 			}
 		}
 		
-		public System.Data.Linq.Table<excursiones> excursiones
+		public System.Data.Linq.Table<excursione> excursiones
 		{
 			get
 			{
-				return this.GetTable<excursiones>();
+				return this.GetTable<excursione>();
 			}
 		}
 		
@@ -140,6 +140,14 @@ namespace DataLayer
 			}
 		}
 		
+		public System.Data.Linq.Table<paquetes_excursione> paquetes_excursiones
+		{
+			get
+			{
+				return this.GetTable<paquetes_excursione>();
+			}
+		}
+		
 		public System.Data.Linq.Table<proveedore> proveedores
 		{
 			get
@@ -156,19 +164,11 @@ namespace DataLayer
 			}
 		}
 		
-		public System.Data.Linq.Table<paquetes_excursione> paquetes_excursiones
+		public System.Data.Linq.Table<transporte> transportes
 		{
 			get
 			{
-				return this.GetTable<paquetes_excursione>();
-			}
-		}
-		
-		public System.Data.Linq.Table<Usuario> Usuarios
-		{
-			get
-			{
-				return this.GetTable<Usuario>();
+				return this.GetTable<transporte>();
 			}
 		}
 	}
@@ -387,172 +387,139 @@ namespace DataLayer
 		}
 	}
 	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.transporte")]
-	public partial class transporte : INotifyPropertyChanging, INotifyPropertyChanged
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Usuarios")]
+	public partial class Usuario : INotifyPropertyChanging, INotifyPropertyChanged
 	{
 		
 		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
 		
-		private int _id_transporte;
+		private int _Id;
 		
-		private string _tipo;
+		private string _NombreUsuario;
 		
-		private int _capacidad;
+		private string _Contrasena;
 		
-		private int _id_proveedor;
+		private string _Rol;
 		
-		private EntitySet<paquete> _paquetes;
-		
-		private EntityRef<proveedore> _proveedore;
+		private System.Nullable<System.DateTime> _FechaCreacion;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
     partial void OnValidate(System.Data.Linq.ChangeAction action);
     partial void OnCreated();
-    partial void Onid_transporteChanging(int value);
-    partial void Onid_transporteChanged();
-    partial void OntipoChanging(string value);
-    partial void OntipoChanged();
-    partial void OncapacidadChanging(int value);
-    partial void OncapacidadChanged();
-    partial void Onid_proveedorChanging(int value);
-    partial void Onid_proveedorChanged();
+    partial void OnIdChanging(int value);
+    partial void OnIdChanged();
+    partial void OnNombreUsuarioChanging(string value);
+    partial void OnNombreUsuarioChanged();
+    partial void OnContrasenaChanging(string value);
+    partial void OnContrasenaChanged();
+    partial void OnRolChanging(string value);
+    partial void OnRolChanged();
+    partial void OnFechaCreacionChanging(System.Nullable<System.DateTime> value);
+    partial void OnFechaCreacionChanged();
     #endregion
 		
-		public transporte()
+		public Usuario()
 		{
-			this._paquetes = new EntitySet<paquete>(new Action<paquete>(this.attach_paquetes), new Action<paquete>(this.detach_paquetes));
-			this._proveedore = default(EntityRef<proveedore>);
 			OnCreated();
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id_transporte", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
-		public int id_transporte
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int Id
 		{
 			get
 			{
-				return this._id_transporte;
+				return this._Id;
 			}
 			set
 			{
-				if ((this._id_transporte != value))
+				if ((this._Id != value))
 				{
-					this.Onid_transporteChanging(value);
+					this.OnIdChanging(value);
 					this.SendPropertyChanging();
-					this._id_transporte = value;
-					this.SendPropertyChanged("id_transporte");
-					this.Onid_transporteChanged();
+					this._Id = value;
+					this.SendPropertyChanged("Id");
+					this.OnIdChanged();
 				}
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_tipo", DbType="NVarChar(50) NOT NULL", CanBeNull=false)]
-		public string tipo
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_NombreUsuario", DbType="NVarChar(100) NOT NULL", CanBeNull=false)]
+		public string NombreUsuario
 		{
 			get
 			{
-				return this._tipo;
+				return this._NombreUsuario;
 			}
 			set
 			{
-				if ((this._tipo != value))
+				if ((this._NombreUsuario != value))
 				{
-					this.OntipoChanging(value);
+					this.OnNombreUsuarioChanging(value);
 					this.SendPropertyChanging();
-					this._tipo = value;
-					this.SendPropertyChanged("tipo");
-					this.OntipoChanged();
+					this._NombreUsuario = value;
+					this.SendPropertyChanged("NombreUsuario");
+					this.OnNombreUsuarioChanged();
 				}
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_capacidad", DbType="Int NOT NULL")]
-		public int capacidad
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Contrasena", DbType="NVarChar(255) NOT NULL", CanBeNull=false)]
+		public string Contrasena
 		{
 			get
 			{
-				return this._capacidad;
+				return this._Contrasena;
 			}
 			set
 			{
-				if ((this._capacidad != value))
+				if ((this._Contrasena != value))
 				{
-					this.OncapacidadChanging(value);
+					this.OnContrasenaChanging(value);
 					this.SendPropertyChanging();
-					this._capacidad = value;
-					this.SendPropertyChanged("capacidad");
-					this.OncapacidadChanged();
+					this._Contrasena = value;
+					this.SendPropertyChanged("Contrasena");
+					this.OnContrasenaChanged();
 				}
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id_proveedor", DbType="Int NOT NULL")]
-		public int id_proveedor
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Rol", DbType="NVarChar(50)")]
+		public string Rol
 		{
 			get
 			{
-				return this._id_proveedor;
+				return this._Rol;
 			}
 			set
 			{
-				if ((this._id_proveedor != value))
+				if ((this._Rol != value))
 				{
-					if (this._proveedore.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.Onid_proveedorChanging(value);
+					this.OnRolChanging(value);
 					this.SendPropertyChanging();
-					this._id_proveedor = value;
-					this.SendPropertyChanged("id_proveedor");
-					this.Onid_proveedorChanged();
+					this._Rol = value;
+					this.SendPropertyChanged("Rol");
+					this.OnRolChanged();
 				}
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="transporte_paquete", Storage="_paquetes", ThisKey="id_transporte", OtherKey="id_transporte")]
-		public EntitySet<paquete> paquetes
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FechaCreacion", DbType="DateTime")]
+		public System.Nullable<System.DateTime> FechaCreacion
 		{
 			get
 			{
-				return this._paquetes;
+				return this._FechaCreacion;
 			}
 			set
 			{
-				this._paquetes.Assign(value);
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="proveedore_transporte", Storage="_proveedore", ThisKey="id_proveedor", OtherKey="id_proveedor", IsForeignKey=true)]
-		public proveedore proveedore
-		{
-			get
-			{
-				return this._proveedore.Entity;
-			}
-			set
-			{
-				proveedore previousValue = this._proveedore.Entity;
-				if (((previousValue != value) 
-							|| (this._proveedore.HasLoadedOrAssignedValue == false)))
+				if ((this._FechaCreacion != value))
 				{
+					this.OnFechaCreacionChanging(value);
 					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._proveedore.Entity = null;
-						previousValue.transportes.Remove(this);
-					}
-					this._proveedore.Entity = value;
-					if ((value != null))
-					{
-						value.transportes.Add(this);
-						this._id_proveedor = value.id_proveedor;
-					}
-					else
-					{
-						this._id_proveedor = default(int);
-					}
-					this.SendPropertyChanged("proveedore");
+					this._FechaCreacion = value;
+					this.SendPropertyChanged("FechaCreacion");
+					this.OnFechaCreacionChanged();
 				}
 			}
 		}
@@ -576,22 +543,10 @@ namespace DataLayer
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
 		}
-		
-		private void attach_paquetes(paquete entity)
-		{
-			this.SendPropertyChanging();
-			entity.transporte = this;
-		}
-		
-		private void detach_paquetes(paquete entity)
-		{
-			this.SendPropertyChanging();
-			entity.transporte = null;
-		}
 	}
 	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.excursiones")]
-	public partial class excursiones : INotifyPropertyChanging, INotifyPropertyChanged
+	public partial class excursione : INotifyPropertyChanging, INotifyPropertyChanged
 	{
 		
 		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
@@ -624,7 +579,7 @@ namespace DataLayer
     partial void OncapacidadChanged();
     #endregion
 		
-		public excursiones()
+		public excursione()
 		{
 			this._paquetes_excursiones = new EntitySet<paquetes_excursione>(new Action<paquetes_excursione>(this.attach_paquetes_excursiones), new Action<paquetes_excursione>(this.detach_paquetes_excursiones));
 			OnCreated();
@@ -730,7 +685,7 @@ namespace DataLayer
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="excursiones_paquetes_excursione", Storage="_paquetes_excursiones", ThisKey="id_excursion", OtherKey="id_excursion")]
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="excursione_paquetes_excursione", Storage="_paquetes_excursiones", ThisKey="id_excursion", OtherKey="id_excursion")]
 		public EntitySet<paquetes_excursione> paquetes_excursiones
 		{
 			get
@@ -766,13 +721,13 @@ namespace DataLayer
 		private void attach_paquetes_excursiones(paquetes_excursione entity)
 		{
 			this.SendPropertyChanging();
-			entity.excursiones = this;
+			entity.excursione = this;
 		}
 		
 		private void detach_paquetes_excursiones(paquetes_excursione entity)
 		{
 			this.SendPropertyChanging();
-			entity.excursiones = null;
+			entity.excursione = null;
 		}
 	}
 	
@@ -1235,9 +1190,9 @@ namespace DataLayer
 		
 		private EntitySet<opiniones_cliente> _opiniones_clientes;
 		
-		private EntitySet<reserva> _reservas;
-		
 		private EntitySet<paquetes_excursione> _paquetes_excursiones;
+		
+		private EntitySet<reserva> _reservas;
 		
 		private EntityRef<transporte> _transporte;
 		
@@ -1262,8 +1217,8 @@ namespace DataLayer
 		public paquete()
 		{
 			this._opiniones_clientes = new EntitySet<opiniones_cliente>(new Action<opiniones_cliente>(this.attach_opiniones_clientes), new Action<opiniones_cliente>(this.detach_opiniones_clientes));
-			this._reservas = new EntitySet<reserva>(new Action<reserva>(this.attach_reservas), new Action<reserva>(this.detach_reservas));
 			this._paquetes_excursiones = new EntitySet<paquetes_excursione>(new Action<paquetes_excursione>(this.attach_paquetes_excursiones), new Action<paquetes_excursione>(this.detach_paquetes_excursiones));
+			this._reservas = new EntitySet<reserva>(new Action<reserva>(this.attach_reservas), new Action<reserva>(this.detach_reservas));
 			this._transporte = default(EntityRef<transporte>);
 			OnCreated();
 		}
@@ -1405,19 +1360,6 @@ namespace DataLayer
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="paquete_reserva", Storage="_reservas", ThisKey="id_paquete", OtherKey="id_paquete")]
-		public EntitySet<reserva> reservas
-		{
-			get
-			{
-				return this._reservas;
-			}
-			set
-			{
-				this._reservas.Assign(value);
-			}
-		}
-		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="paquete_paquetes_excursione", Storage="_paquetes_excursiones", ThisKey="id_paquete", OtherKey="id_paquete")]
 		public EntitySet<paquetes_excursione> paquetes_excursiones
 		{
@@ -1428,6 +1370,19 @@ namespace DataLayer
 			set
 			{
 				this._paquetes_excursiones.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="paquete_reserva", Storage="_reservas", ThisKey="id_paquete", OtherKey="id_paquete")]
+		public EntitySet<reserva> reservas
+		{
+			get
+			{
+				return this._reservas;
+			}
+			set
+			{
+				this._reservas.Assign(value);
 			}
 		}
 		
@@ -1497,6 +1452,18 @@ namespace DataLayer
 			entity.paquete = null;
 		}
 		
+		private void attach_paquetes_excursiones(paquetes_excursione entity)
+		{
+			this.SendPropertyChanging();
+			entity.paquete = this;
+		}
+		
+		private void detach_paquetes_excursiones(paquetes_excursione entity)
+		{
+			this.SendPropertyChanging();
+			entity.paquete = null;
+		}
+		
 		private void attach_reservas(reserva entity)
 		{
 			this.SendPropertyChanging();
@@ -1508,17 +1475,197 @@ namespace DataLayer
 			this.SendPropertyChanging();
 			entity.paquete = null;
 		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.paquetes_excursiones")]
+	public partial class paquetes_excursione : INotifyPropertyChanging, INotifyPropertyChanged
+	{
 		
-		private void attach_paquetes_excursiones(paquetes_excursione entity)
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _id_paquete_excursion;
+		
+		private int _id_paquete;
+		
+		private int _id_excursion;
+		
+		private EntityRef<excursione> _excursione;
+		
+		private EntityRef<paquete> _paquete;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void Onid_paquete_excursionChanging(int value);
+    partial void Onid_paquete_excursionChanged();
+    partial void Onid_paqueteChanging(int value);
+    partial void Onid_paqueteChanged();
+    partial void Onid_excursionChanging(int value);
+    partial void Onid_excursionChanged();
+    #endregion
+		
+		public paquetes_excursione()
 		{
-			this.SendPropertyChanging();
-			entity.paquete = this;
+			this._excursione = default(EntityRef<excursione>);
+			this._paquete = default(EntityRef<paquete>);
+			OnCreated();
 		}
 		
-		private void detach_paquetes_excursiones(paquetes_excursione entity)
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id_paquete_excursion", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int id_paquete_excursion
 		{
-			this.SendPropertyChanging();
-			entity.paquete = null;
+			get
+			{
+				return this._id_paquete_excursion;
+			}
+			set
+			{
+				if ((this._id_paquete_excursion != value))
+				{
+					this.Onid_paquete_excursionChanging(value);
+					this.SendPropertyChanging();
+					this._id_paquete_excursion = value;
+					this.SendPropertyChanged("id_paquete_excursion");
+					this.Onid_paquete_excursionChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id_paquete", DbType="Int NOT NULL")]
+		public int id_paquete
+		{
+			get
+			{
+				return this._id_paquete;
+			}
+			set
+			{
+				if ((this._id_paquete != value))
+				{
+					if (this._paquete.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.Onid_paqueteChanging(value);
+					this.SendPropertyChanging();
+					this._id_paquete = value;
+					this.SendPropertyChanged("id_paquete");
+					this.Onid_paqueteChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id_excursion", DbType="Int NOT NULL")]
+		public int id_excursion
+		{
+			get
+			{
+				return this._id_excursion;
+			}
+			set
+			{
+				if ((this._id_excursion != value))
+				{
+					if (this._excursione.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.Onid_excursionChanging(value);
+					this.SendPropertyChanging();
+					this._id_excursion = value;
+					this.SendPropertyChanged("id_excursion");
+					this.Onid_excursionChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="excursione_paquetes_excursione", Storage="_excursione", ThisKey="id_excursion", OtherKey="id_excursion", IsForeignKey=true)]
+		public excursione excursione
+		{
+			get
+			{
+				return this._excursione.Entity;
+			}
+			set
+			{
+				excursione previousValue = this._excursione.Entity;
+				if (((previousValue != value) 
+							|| (this._excursione.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._excursione.Entity = null;
+						previousValue.paquetes_excursiones.Remove(this);
+					}
+					this._excursione.Entity = value;
+					if ((value != null))
+					{
+						value.paquetes_excursiones.Add(this);
+						this._id_excursion = value.id_excursion;
+					}
+					else
+					{
+						this._id_excursion = default(int);
+					}
+					this.SendPropertyChanged("excursione");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="paquete_paquetes_excursione", Storage="_paquete", ThisKey="id_paquete", OtherKey="id_paquete", IsForeignKey=true)]
+		public paquete paquete
+		{
+			get
+			{
+				return this._paquete.Entity;
+			}
+			set
+			{
+				paquete previousValue = this._paquete.Entity;
+				if (((previousValue != value) 
+							|| (this._paquete.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._paquete.Entity = null;
+						previousValue.paquetes_excursiones.Remove(this);
+					}
+					this._paquete.Entity = value;
+					if ((value != null))
+					{
+						value.paquetes_excursiones.Add(this);
+						this._id_paquete = value.id_paquete;
+					}
+					else
+					{
+						this._id_paquete = default(int);
+					}
+					this.SendPropertyChanged("paquete");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
 		}
 	}
 	
@@ -1952,173 +2099,172 @@ namespace DataLayer
 		}
 	}
 	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.paquetes_excursiones")]
-	public partial class paquetes_excursione : INotifyPropertyChanging, INotifyPropertyChanged
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.transportes")]
+	public partial class transporte : INotifyPropertyChanging, INotifyPropertyChanged
 	{
 		
 		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
 		
-		private int _id_paquete_excursion;
+		private int _id_transporte;
 		
-		private int _id_paquete;
+		private string _tipo;
 		
-		private int _id_excursion;
+		private int _capacidad;
 		
-		private EntityRef<excursiones> _excursiones;
+		private int _id_proveedor;
 		
-		private EntityRef<paquete> _paquete;
+		private EntitySet<paquete> _paquetes;
+		
+		private EntityRef<proveedore> _proveedore;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
     partial void OnValidate(System.Data.Linq.ChangeAction action);
     partial void OnCreated();
-    partial void Onid_paquete_excursionChanging(int value);
-    partial void Onid_paquete_excursionChanged();
-    partial void Onid_paqueteChanging(int value);
-    partial void Onid_paqueteChanged();
-    partial void Onid_excursionChanging(int value);
-    partial void Onid_excursionChanged();
+    partial void Onid_transporteChanging(int value);
+    partial void Onid_transporteChanged();
+    partial void OntipoChanging(string value);
+    partial void OntipoChanged();
+    partial void OncapacidadChanging(int value);
+    partial void OncapacidadChanged();
+    partial void Onid_proveedorChanging(int value);
+    partial void Onid_proveedorChanged();
     #endregion
 		
-		public paquetes_excursione()
+		public transporte()
 		{
-			this._excursiones = default(EntityRef<excursiones>);
-			this._paquete = default(EntityRef<paquete>);
+			this._paquetes = new EntitySet<paquete>(new Action<paquete>(this.attach_paquetes), new Action<paquete>(this.detach_paquetes));
+			this._proveedore = default(EntityRef<proveedore>);
 			OnCreated();
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id_paquete_excursion", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
-		public int id_paquete_excursion
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id_transporte", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int id_transporte
 		{
 			get
 			{
-				return this._id_paquete_excursion;
+				return this._id_transporte;
 			}
 			set
 			{
-				if ((this._id_paquete_excursion != value))
+				if ((this._id_transporte != value))
 				{
-					this.Onid_paquete_excursionChanging(value);
+					this.Onid_transporteChanging(value);
 					this.SendPropertyChanging();
-					this._id_paquete_excursion = value;
-					this.SendPropertyChanged("id_paquete_excursion");
-					this.Onid_paquete_excursionChanged();
+					this._id_transporte = value;
+					this.SendPropertyChanged("id_transporte");
+					this.Onid_transporteChanged();
 				}
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id_paquete", DbType="Int NOT NULL")]
-		public int id_paquete
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_tipo", DbType="NVarChar(50) NOT NULL", CanBeNull=false)]
+		public string tipo
 		{
 			get
 			{
-				return this._id_paquete;
+				return this._tipo;
 			}
 			set
 			{
-				if ((this._id_paquete != value))
+				if ((this._tipo != value))
 				{
-					if (this._paquete.HasLoadedOrAssignedValue)
+					this.OntipoChanging(value);
+					this.SendPropertyChanging();
+					this._tipo = value;
+					this.SendPropertyChanged("tipo");
+					this.OntipoChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_capacidad", DbType="Int NOT NULL")]
+		public int capacidad
+		{
+			get
+			{
+				return this._capacidad;
+			}
+			set
+			{
+				if ((this._capacidad != value))
+				{
+					this.OncapacidadChanging(value);
+					this.SendPropertyChanging();
+					this._capacidad = value;
+					this.SendPropertyChanged("capacidad");
+					this.OncapacidadChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id_proveedor", DbType="Int NOT NULL")]
+		public int id_proveedor
+		{
+			get
+			{
+				return this._id_proveedor;
+			}
+			set
+			{
+				if ((this._id_proveedor != value))
+				{
+					if (this._proveedore.HasLoadedOrAssignedValue)
 					{
 						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
 					}
-					this.Onid_paqueteChanging(value);
+					this.Onid_proveedorChanging(value);
 					this.SendPropertyChanging();
-					this._id_paquete = value;
-					this.SendPropertyChanged("id_paquete");
-					this.Onid_paqueteChanged();
+					this._id_proveedor = value;
+					this.SendPropertyChanged("id_proveedor");
+					this.Onid_proveedorChanged();
 				}
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id_excursion", DbType="Int NOT NULL")]
-		public int id_excursion
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="transporte_paquete", Storage="_paquetes", ThisKey="id_transporte", OtherKey="id_transporte")]
+		public EntitySet<paquete> paquetes
 		{
 			get
 			{
-				return this._id_excursion;
+				return this._paquetes;
 			}
 			set
 			{
-				if ((this._id_excursion != value))
-				{
-					if (this._excursiones.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.Onid_excursionChanging(value);
-					this.SendPropertyChanging();
-					this._id_excursion = value;
-					this.SendPropertyChanged("id_excursion");
-					this.Onid_excursionChanged();
-				}
+				this._paquetes.Assign(value);
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="excursiones_paquetes_excursione", Storage="_excursiones", ThisKey="id_excursion", OtherKey="id_excursion", IsForeignKey=true)]
-		public excursiones excursiones
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="proveedore_transporte", Storage="_proveedore", ThisKey="id_proveedor", OtherKey="id_proveedor", IsForeignKey=true)]
+		public proveedore proveedore
 		{
 			get
 			{
-				return this._excursiones.Entity;
+				return this._proveedore.Entity;
 			}
 			set
 			{
-				excursiones previousValue = this._excursiones.Entity;
+				proveedore previousValue = this._proveedore.Entity;
 				if (((previousValue != value) 
-							|| (this._excursiones.HasLoadedOrAssignedValue == false)))
+							|| (this._proveedore.HasLoadedOrAssignedValue == false)))
 				{
 					this.SendPropertyChanging();
 					if ((previousValue != null))
 					{
-						this._excursiones.Entity = null;
-						previousValue.paquetes_excursiones.Remove(this);
+						this._proveedore.Entity = null;
+						previousValue.transportes.Remove(this);
 					}
-					this._excursiones.Entity = value;
+					this._proveedore.Entity = value;
 					if ((value != null))
 					{
-						value.paquetes_excursiones.Add(this);
-						this._id_excursion = value.id_excursion;
+						value.transportes.Add(this);
+						this._id_proveedor = value.id_proveedor;
 					}
 					else
 					{
-						this._id_excursion = default(int);
+						this._id_proveedor = default(int);
 					}
-					this.SendPropertyChanged("excursiones");
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="paquete_paquetes_excursione", Storage="_paquete", ThisKey="id_paquete", OtherKey="id_paquete", IsForeignKey=true)]
-		public paquete paquete
-		{
-			get
-			{
-				return this._paquete.Entity;
-			}
-			set
-			{
-				paquete previousValue = this._paquete.Entity;
-				if (((previousValue != value) 
-							|| (this._paquete.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._paquete.Entity = null;
-						previousValue.paquetes_excursiones.Remove(this);
-					}
-					this._paquete.Entity = value;
-					if ((value != null))
-					{
-						value.paquetes_excursiones.Add(this);
-						this._id_paquete = value.id_paquete;
-					}
-					else
-					{
-						this._id_paquete = default(int);
-					}
-					this.SendPropertyChanged("paquete");
+					this.SendPropertyChanged("proveedore");
 				}
 			}
 		}
@@ -2142,163 +2288,17 @@ namespace DataLayer
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
 		}
-	}
-	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Usuarios")]
-	public partial class Usuario : INotifyPropertyChanging, INotifyPropertyChanged
-	{
 		
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-		
-		private int _Id;
-		
-		private string _NombreUsuario;
-		
-		private string _Contrasena;
-		
-		private string _Rol;
-		
-		private System.Nullable<System.DateTime> _FechaCreacion;
-		
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnIdChanging(int value);
-    partial void OnIdChanged();
-    partial void OnNombreUsuarioChanging(string value);
-    partial void OnNombreUsuarioChanged();
-    partial void OnContrasenaChanging(string value);
-    partial void OnContrasenaChanged();
-    partial void OnRolChanging(string value);
-    partial void OnRolChanged();
-    partial void OnFechaCreacionChanging(System.Nullable<System.DateTime> value);
-    partial void OnFechaCreacionChanged();
-    #endregion
-		
-		public Usuario()
+		private void attach_paquetes(paquete entity)
 		{
-			OnCreated();
+			this.SendPropertyChanging();
+			entity.transporte = this;
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
-		public int Id
+		private void detach_paquetes(paquete entity)
 		{
-			get
-			{
-				return this._Id;
-			}
-			set
-			{
-				if ((this._Id != value))
-				{
-					this.OnIdChanging(value);
-					this.SendPropertyChanging();
-					this._Id = value;
-					this.SendPropertyChanged("Id");
-					this.OnIdChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_NombreUsuario", DbType="NVarChar(100) NOT NULL", CanBeNull=false)]
-		public string NombreUsuario
-		{
-			get
-			{
-				return this._NombreUsuario;
-			}
-			set
-			{
-				if ((this._NombreUsuario != value))
-				{
-					this.OnNombreUsuarioChanging(value);
-					this.SendPropertyChanging();
-					this._NombreUsuario = value;
-					this.SendPropertyChanged("NombreUsuario");
-					this.OnNombreUsuarioChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Contrasena", DbType="NVarChar(255) NOT NULL", CanBeNull=false)]
-		public string Contrasena
-		{
-			get
-			{
-				return this._Contrasena;
-			}
-			set
-			{
-				if ((this._Contrasena != value))
-				{
-					this.OnContrasenaChanging(value);
-					this.SendPropertyChanging();
-					this._Contrasena = value;
-					this.SendPropertyChanged("Contrasena");
-					this.OnContrasenaChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Rol", DbType="NVarChar(50)")]
-		public string Rol
-		{
-			get
-			{
-				return this._Rol;
-			}
-			set
-			{
-				if ((this._Rol != value))
-				{
-					this.OnRolChanging(value);
-					this.SendPropertyChanging();
-					this._Rol = value;
-					this.SendPropertyChanged("Rol");
-					this.OnRolChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FechaCreacion", DbType="DateTime")]
-		public System.Nullable<System.DateTime> FechaCreacion
-		{
-			get
-			{
-				return this._FechaCreacion;
-			}
-			set
-			{
-				if ((this._FechaCreacion != value))
-				{
-					this.OnFechaCreacionChanging(value);
-					this.SendPropertyChanging();
-					this._FechaCreacion = value;
-					this.SendPropertyChanged("FechaCreacion");
-					this.OnFechaCreacionChanged();
-				}
-			}
-		}
-		
-		public event PropertyChangingEventHandler PropertyChanging;
-		
-		public event PropertyChangedEventHandler PropertyChanged;
-		
-		protected virtual void SendPropertyChanging()
-		{
-			if ((this.PropertyChanging != null))
-			{
-				this.PropertyChanging(this, emptyChangingEventArgs);
-			}
-		}
-		
-		protected virtual void SendPropertyChanged(String propertyName)
-		{
-			if ((this.PropertyChanged != null))
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
+			this.SendPropertyChanging();
+			entity.transporte = null;
 		}
 	}
 }

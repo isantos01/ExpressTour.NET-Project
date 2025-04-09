@@ -1,8 +1,7 @@
-﻿@model ModelLayer.DTO.ClientViewModel
-
+﻿@model ModelLayer.DTO.TransporteViewModel
 @{
-    Layout = "~/Views/Shared/_ClientesLayout.cshtml";
-    ViewBag.Title = "Confirmar Eliminación de Cliente";
+    Layout = "~/Views/Shared/_ClientesLayout.cshtml"; // Puedes crear uno específico como _TransporteLayout si deseas
+    ViewBag.Title = "Listado de Transportes";
 }
 
 <div class="container mt-5">
@@ -16,25 +15,24 @@
         <div class="card-body">
             <div class="alert alert-warning d-flex align-items-center" role="alert">
                 <i class="bi bi-info-circle-fill me-2"></i>
-                Estás a punto de eliminar al cliente <strong>@Model.Nombre</strong>. Esta acción también eliminará sus reservas, facturas u otros registros asociados. ¿Deseas continuar?
+                Estás a punto de eliminar al cliente <strong>@Model.Tipo</strong>. Esta acción también eliminará sus reservas, Paquete u otras excursiones asociadas. ¿Deseas continuar?
             </div>
 
             <div class="card border-0 bg-light mt-4">
                 <div class="card-body">
-                    <p><strong>Nombre:</strong> @Model.Nombre</p>
-                    <p><strong>Correo:</strong> @Model.Correo</p>
-                    <p><strong>Teléfono:</strong> @Model.Telefono</p>
-                    <p><strong>Dirección:</strong> @Model.Direccion</p>
+                    <p><strong>Tipo:</strong> @Model.Tipo</p>
+                    <p><strong>Capacidad:</strong> @Model.Capacidad</p>
+                    <p><strong>IdProveedor:</strong> @Model.IdProveedor</p>
                 </div>
             </div>
 
-            @using (Html.BeginForm("DeleteComplete", "Clientes", FormMethod.Post))
+            @using (Html.BeginForm("DeleteComplete", "Transportes", FormMethod.Post))
             {
                 @Html.AntiForgeryToken()
                 @Html.HiddenFor(model => model.Id)
 
                 <div class="d-flex justify-content-between mt-4">
-                    <a href="@Url.Action("Index", "Clientes")" class="btn btn-outline-secondary">
+                    <a href="@Url.Action("Index", "Transportes")" class="btn btn-outline-secondary">
                         <i class="bi bi-arrow-left-circle me-1"></i> Cancelar
                     </a>
                     <button type="submit" class="btn btn-danger">
