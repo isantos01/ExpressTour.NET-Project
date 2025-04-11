@@ -1,0 +1,69 @@
+﻿@model IEnumerable<ModelLayer.DTO.ReservaViewModel>
+@{
+    Layout = "~/Views/Shared/_ClientesLayout.cshtml";
+    ViewBag.Title = "Listado de Reservas";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Listado de Reservas</h2>
+
+    <div class="text-center mb-4">
+        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createReservaModal">
+            Agregar Reserva
+        </button>
+    </div>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Cliente</th>
+                <th>Paquete</th>
+                <th>Fecha</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var reserva in Model)
+            {
+                <tr>
+                    <td>@reserva.Id</td>
+                    <td>@reserva.NombreCliente</td>
+                    <td>@reserva.IdPaquete</td>
+                    <td>@reserva.FechaReserva.ToShortDateString()</td>
+                    <td>@reserva.Estado</td>
+                    <td>
+                        <a href="@Url.Action("Edit", "Reservas", new { id = reserva.Id })" class="btn btn-sm btn-primary">Editar</a>
+                        @using (Html.BeginForm("Delete", "Reservas", FormMethod.Post))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.Hidden("id", reserva.Id)
+                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('¿Estás seguro que deseas eliminar esta reserva?');">
+                                Eliminar
+                            </button>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="text-center mt-4">
+        <a href="@Url.Action("Index", "Dashboard")" class="btn btn-secondary">Volver al Dashboard</a>
+    </div>
+</div>
+
+<!-- Modal: Crear Reserva (ya existente como _CreateReserva.cshtml) -->
+<div class="modal fade" id="createReservaModal" tabindex="-1" aria-labelledby="createReservaModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="createReservaModalContent">
+            @Html.Partial("_CreateReserva", new ModelLayer.DTO.ReservaViewModel
+            {
+                FechaReserva = DateTime.Now,
+                Estado = "activo"
+            })
+        </div>
+    </div>
+</div>
+

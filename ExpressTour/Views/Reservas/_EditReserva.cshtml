@@ -1,0 +1,40 @@
+﻿@model ModelLayer.DTO.ReservaViewModel
+
+@using (Html.BeginForm("Edit", "Reservas", FormMethod.Post, new { id = "editReservaForm" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.Id)
+
+    <div class="modal-header">
+        <h5 class="modal-title">Editar Reserva</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+    </div>
+
+    <div class="modal-body">
+        <div class="mb-3">
+            @Html.LabelFor(m => m.NombreCliente, "Nombre del Cliente", new { @class = "form-label" })
+            @Html.TextBoxFor(m => m.NombreCliente, new { @class = "form-control", placeholder = "Nombre del Cliente", required = "required" })
+        </div>
+        <div class="mb-3">
+            @Html.LabelFor(m => m.DireccionCliente, "Dirección del Cliente", new { @class = "form-label" })
+            @Html.TextBoxFor(m => m.DireccionCliente, new { @class = "form-control", placeholder = "Dirección del Cliente" })
+        </div>
+        <div class="mb-3">
+            @Html.LabelFor(m => m.TelefonoCliente, "Teléfono del Cliente", new { @class = "form-label" })
+            @Html.TextBoxFor(m => m.TelefonoCliente, new { @class = "form-control", placeholder = "Teléfono del Cliente" })
+        </div>
+        <div class="mb-3">
+            @Html.Label("Paquete", new { @class = "form-label" })
+            @Html.DropDownListFor(m => m.IdPaquete, new SelectList(ViewBag.Paquetes as IEnumerable<SelectListItem>, "Value", "Text"), "Seleccione un paquete", new { @class = "form-control", required = "required" })
+        </div>
+        <div class="mb-3">
+            @Html.LabelFor(m => m.Estado, new { @class = "form-label" })
+            @Html.TextBoxFor(m => m.Estado, new { @class = "form-control", required = "required" })
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+    </div>
+}

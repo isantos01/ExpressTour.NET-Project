@@ -16,6 +16,6 @@ namespace BusinessLayer.Repository
         void UpdateTransporte(transporte transporte);
         bool DeleteTransporte(int id);
         void DeleteTransporteCascade(int id);
-        bool ProveedorExiste (int IdProveedor);
+        bool ProveedorExiste(int IdProveedor);
     }
 }

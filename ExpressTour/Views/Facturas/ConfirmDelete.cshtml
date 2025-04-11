@@ -1,0 +1,42 @@
+﻿@model ModelLayer.DTO.FacturasViewModel
+
+@{
+    Layout = "~/Views/Shared/_ClientesLayout.cshtml"; // O el layout que uses para páginas administrativas
+    ViewBag.Title = "Confirmar Eliminación de Factura";
+}
+
+<div class="container mt-5">
+    <div class="card shadow-lg border-0">
+        <div class="card-header bg-danger text-white">
+            <h4 class="mb-0">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i> Confirmar Eliminación
+            </h4>
+        </div>
+        <div class="card-body">
+            <p class="fs-5">
+                Estás a punto de eliminar la factura del ID Reserva: <strong>@Model.IdReserva</strong>.
+            </p>
+
+            <div class="card bg-light mb-3">
+                <div class="card-body">
+                    <p><strong>ID Factura:</strong> @Model.Id</p>
+                    <p><strong>Total:</strong> @Model.Total</p>
+                    <p><strong>Fecha Emisión:</strong> @Model.Fecha_Emision.ToString("dd/MM/yyyy")</p>
+                </div>
+            </div>
+
+            @using (Html.BeginForm("DeleteComplete", "Facturas", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(model => model.Id)
+
+                <div class="d-flex justify-content-between">
+                    <a href="@Url.Action("Index", "Facturas")" class="btn btn-secondary">Cancelar</a>
+                    <button type="submit" class="btn btn-danger">
+                        <i class="bi bi-trash-fill me-1"></i> Eliminar Definitivamente
+                    </button>
+                </div>
+            }
+        </div>
+    </div>
+</div>

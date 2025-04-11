@@ -1,0 +1,93 @@
+﻿@model ModelLayer.DTO.ReservaViewModel
+
+@{
+    Layout = "~/Views/Shared/_ClientesLayout.cshtml"; // Como es un modal parcial
+}
+
+<div class="d-flex justify-content-center align-items-center min-vh-100">
+    <div class="card shadow-lg border-0 rounded-4" style="width: 100%; max-width: 600px;">
+        <div class="card-header bg-primary text-white text-center">
+            <h5 class="mb-0">
+                <i class="bi bi-calendar-plus me-2"></i> Crear Nueva Reserva
+            </h5>
+        </div>
+
+        @using (Html.BeginForm("CrearReservaDesdeFactura", "Reservas", FormMethod.Post, new { id = "formCrearReserva" }))
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="card-body px-4 py-4">
+
+                <div class="alert alert-info d-flex align-items-center" role="alert">
+                    <i class="bi bi-info-circle me-2"></i>
+                    Completa los datos para registrar una reserva y un cliente.
+                </div>
+
+                <!-- Paquete -->
+                <div class="mb-3">
+                    @Html.LabelFor(m => m.IdPaquete, "Paquete", new { @class = "form-label fw-semibold" })
+                    @Html.DropDownListFor(m => m.IdPaquete, new SelectList(Enumerable.Empty<SelectListItem>()), "-- Seleccione un paquete --", new { @class = "form-select", id = "paqueteDropdown", required = "required" })
+                    @Html.ValidationMessageFor(m => m.IdPaquete, "", new { @class = "text-danger" })
+                </div>
+
+                <hr />
+
+                <!-- Cliente -->
+                <h6 class="text-secondary fw-bold mb-3">Datos del Cliente</h6>
+
+                <div class="mb-3">
+                    @Html.Label("Nombre Cliente", new { @class = "form-label" })
+                    <input type="text" name="NombreCliente" class="form-control" placeholder="Ej. Juan Pérez" required />
+                </div>
+
+                <div class="mb-3">
+                    @Html.Label("Dirección Cliente", new { @class = "form-label" })
+                    <input type="text" name="DireccionCliente" class="form-control" placeholder="Ej. Calle 123, Ciudad" required />
+                </div>
+
+                <div class="mb-3">
+                    @Html.Label("Teléfono Cliente", new { @class = "form-label" })
+                    <input type="text" name="TelefonoCliente" class="form-control" placeholder="Ej. 809-123-4567" required />
+                </div>
+
+                <hr />
+
+                <!-- Fecha -->
+                <div class="mb-3">
+                    @Html.LabelFor(m => m.FechaReserva, "Fecha de Reserva", new { @class = "form-label" })
+                    @Html.TextBoxFor(m => m.FechaReserva, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date", @readonly = "readonly", value = DateTime.Now.ToString("yyyy-MM-dd") })
+                    @Html.ValidationMessageFor(m => m.FechaReserva, "", new { @class = "text-danger" })
+                </div>
+
+                <!-- Estado oculto -->
+                @Html.HiddenFor(m => m.Estado, new { Value = "activo" })
+            </div>
+
+            <div class="card-footer bg-light d-flex justify-content-between rounded-bottom-4 px-4 py-3">
+                <a href="@Url.Action("Index", "Dashboard")" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left-circle me-1"></i> Cancelar
+                </a>
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-save2 me-1"></i> Crear Reserva
+                </button>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $("#crearReservaModal").on('shown.bs.modal', function () {
+                $.get('@Url.Action("ObtenerPaquetes", "Reservas")', function (data) {
+                    var dropdown = $("#paqueteDropdown");
+                    dropdown.empty();
+                    dropdown.append('<option value="">-- Seleccione un paquete --</option>');
+                    $.each(data, function (index, paquete) {
+                        dropdown.append('<option value="' + paquete.Id + '">' + paquete.Nombre + '</option>');
+                    });
+                });
+            });
+        });
+    </script>
+}
