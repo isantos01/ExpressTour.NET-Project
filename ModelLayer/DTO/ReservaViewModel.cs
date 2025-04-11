@@ -14,5 +14,7 @@ namespace ModelLayer.DTO
         public DateTime FechaReserva { get; set; }
         public string Estado { get; set; }         // Valor por defecto "activo"
         public decimal Total { get; set; }
+        public string CorreoCliente { get; set; }
+
     }
 }

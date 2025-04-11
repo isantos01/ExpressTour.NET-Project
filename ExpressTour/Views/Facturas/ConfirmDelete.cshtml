@@ -1,42 +1,177 @@
-﻿@model ModelLayer.DTO.FacturasViewModel
-
+﻿@model IEnumerable<ModelLayer.DTO.FacturasViewModel>
 @{
-    Layout = "~/Views/Shared/_ClientesLayout.cshtml"; // O el layout que uses para páginas administrativas
-    ViewBag.Title = "Confirmar Eliminación de Factura";
+    Layout = "~/Views/Shared/_ClientesLayout.cshtml";
+    ViewBag.Title = "Listado de Facturas";
 }
 
 <div class="container mt-5">
-    <div class="card shadow-lg border-0">
-        <div class="card-header bg-danger text-white">
-            <h4 class="mb-0">
-                <i class="bi bi-exclamation-triangle-fill me-2"></i> Confirmar Eliminación
-            </h4>
-        </div>
-        <div class="card-body">
-            <p class="fs-5">
-                Estás a punto de eliminar la factura del ID Reserva: <strong>@Model.IdReserva</strong>.
-            </p>
+    <h2 class="text-center mb-4">Listado de Facturas</h2>
 
-            <div class="card bg-light mb-3">
-                <div class="card-body">
-                    <p><strong>ID Factura:</strong> @Model.Id</p>
-                    <p><strong>Total:</strong> @Model.Total</p>
-                    <p><strong>Fecha Emisión:</strong> @Model.Fecha_Emision.ToString("dd/MM/yyyy")</p>
-                </div>
-            </div>
+    <div class="text-center mb-4">
+        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createFacturaModal">
+            Agregar Factura
+        </button>
+    </div>
 
-            @using (Html.BeginForm("DeleteComplete", "Facturas", FormMethod.Post))
+    @* Mensajes de operación *@
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success text-center">@TempData["Success"]</div>
+    }
+    @if (TempData["Warning"] != null)
+    {
+        <div class="alert alert-warning text-center">@TempData["Warning"]</div>
+    }
+
+    <table class="table table-striped text-center">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>ID Reserva</th>
+                <th>Total</th>
+                <th>Fecha Emisión</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var factura in Model)
             {
-                @Html.AntiForgeryToken()
-                @Html.HiddenFor(model => model.Id)
-
-                <div class="d-flex justify-content-between">
-                    <a href="@Url.Action("Index", "Facturas")" class="btn btn-secondary">Cancelar</a>
-                    <button type="submit" class="btn btn-danger">
-                        <i class="bi bi-trash-fill me-1"></i> Eliminar Definitivamente
-                    </button>
-                </div>
+                <tr>
+                    <td>@factura.Id</td>
+                    <td>@factura.IdReserva</td>
+                    <td>@factura.Total</td>
+                    <td>@factura.Fecha_Emision.ToString("dd/MM/yyyy")</td>
+                    <td>
+                        <button type="button" data-id="@factura.Id" class="btn btn-sm btn-primary editFacturaBtn">
+                            Editar
+                        </button>
+                        <button type="button" data-id="@factura.Id" class="btn btn-sm btn-danger deleteFacturaBtn">
+                            Eliminar
+                        </button>
+                    </td>
+                </tr>
             }
+        </tbody>
+    </table>
+
+    <div class="text-center mt-4">
+        <a href="@Url.Action("Index", "Dashboard")" class="btn btn-secondary btn-sm">Home Dashboard</a>
+    </div>
+</div>
+
+@* Modal: Crear Factura *@
+<div class="modal fade" id="createFacturaModal" tabindex="-1" aria-labelledby="createFacturaModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="createFacturaModalContent">
+            @* Aquí se carga la vista parcial de Crear Factura mediante el Action "Create" del controlador *@
+            @Html.Action("Create", "Facturas")
         </div>
     </div>
 </div>
+
+@* Modal: Editar Factura (cargado vía AJAX) *@
+<div class="modal fade" id="editFacturaModal" tabindex="-1" aria-labelledby="editFacturaModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="editFacturaModalContent">
+            @* Se cargará el contenido parcial _EditFactura via AJAX *@
+        </div>
+    </div>
+</div>
+
+@* Modal: Eliminar Factura *@
+<div class="modal fade" id="deleteFacturaModal" tabindex="-1" aria-labelledby="deleteFacturaModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="deleteFacturaModalLabel">Confirmar Eliminación</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                ¿Estás seguro de que deseas eliminar esta factura?
+            </div>
+            <div class="modal-footer">
+                @using (Html.BeginForm("DeleteComplete", "Facturas", FormMethod.Post, new { id = "deleteFacturaForm" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" id="deleteFacturaId" name="id" />
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-danger">Eliminar definitivamente</button>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@* Modal: Crear Reserva desde Factura (si falta la reserva) *@
+<div class="modal fade" id="crearReservaModal" tabindex="-1" aria-labelledby="crearReservaModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="crearReservaModalContent">
+            @Html.Partial("_CreateReserva", new ModelLayer.DTO.ReservaViewModel { FechaReserva = DateTime.Now, Estado = "pendiente" })
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+
+            // Mostrar modal de crear reserva si TempData["MissingReservaId"] se estableció
+            const mostrarReserva = '@(TempData["MissingReservaId"] != null ? "true" : "false")';
+            if (mostrarReserva === "true") {
+                $("#crearReservaModal").modal("show");
+            }
+
+            // Cargar el dropdown de paquetes cuando se muestre el modal de crear reserva
+            $(document).on("shown.bs.modal", "#crearReservaModal", function () {
+                $.get('@Url.Action("ObtenerPaquetes", "Facturas")', function (data) {
+                    const dropdown = $("#paqueteDropdown");
+                    dropdown.empty().append('<option value="">-- Seleccione un paquete --</option>');
+                    $.each(data, function (i, item) {
+                        dropdown.append(`<option value="${item.Id}">${item.Nombre}</option>`);
+                    });
+                });
+            });
+
+            // Modal: Editar Factura vía AJAX
+            $(".editFacturaBtn").click(function (e) {
+                e.preventDefault();
+                const facturaId = $(this).data("id");
+                $.get('@Url.Action("Edit", "Facturas")', { id: facturaId }, function (html) {
+                    $("#editFacturaModalContent").html(html);
+                    $("#editFacturaModal").modal("show");
+                });
+            });
+
+            // Modal: Eliminar Factura
+            $(".deleteFacturaBtn").click(function (e) {
+                e.preventDefault();
+                const facturaId = $(this).data("id");
+                $("#deleteFacturaId").val(facturaId);
+                $("#deleteFacturaModal").modal("show");
+            });
+        });
+
+        // AJAX para enviar el formulario de crear factura
+        $(document).on("click", "#submitFacturaAjax", function () {
+            const form = $("#createFacturaForm");
+            $.ajax({
+                url: form.attr("action"),
+                type: form.attr("method"),
+                data: form.serialize(),
+                success: function (result) {
+                    if (result.requiresReserva) {
+                        // Si se requiere reserva, cerrar el modal de factura y abrir el modal de reserva con el contenido devuelto
+                        $("#createFacturaModal").modal("hide");
+                        $("#crearReservaModal .modal-content").html(result.html);
+                        $("#crearReservaModal").modal("show");
+                    } else {
+                        location.reload();
+                    }
+                },
+                error: function () {
+                    alert("Ocurrió un error al guardar la factura.");
+                }
+            });
+        });
+    </script>
+}

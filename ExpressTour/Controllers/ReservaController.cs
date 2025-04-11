@@ -60,7 +60,7 @@ namespace ExpressTour.Controllers
             var model = new ReservaViewModel
             {
                 FechaReserva = System.DateTime.Now,
-                Estado = "activo"
+                Estado = "pendiente"
             };
             return PartialView("_CreateReserva", model);
         }
@@ -77,7 +77,7 @@ namespace ExpressTour.Controllers
                     var nuevoCliente = new cliente
                     {
                         nombre = model.NombreCliente,
-                        correo = "", // Puede extenderse
+                        correo = model.CorreoCliente, // Puede extenderse
                         telefono = model.TelefonoCliente,
                         direccion = model.DireccionCliente
                     };
@@ -117,7 +117,7 @@ namespace ExpressTour.Controllers
                     var nuevoCliente = new cliente
                     {
                         nombre = model.NombreCliente,
-                        correo = "",
+                        correo = model.CorreoCliente,
                         telefono = model.TelefonoCliente,
                         direccion = model.DireccionCliente
                     };

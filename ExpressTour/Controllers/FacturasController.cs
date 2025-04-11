@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Web.Mvc;
 using BusinessLayer.Services;
@@ -46,13 +47,14 @@ namespace ExpressTour.Controllers
         {
             if (ModelState.IsValid)
             {
-                // Si la reserva no existe, crearla
+                // Verifica si la reserva ya existe
                 if (!_facturasService.ReservaExiste(model.IdReserva))
                 {
+                    // Si no existe la reserva, mostrar el modal de reserva
                     TempData["MissingReservaId"] = model.IdReserva;
                     TempData["FacturaModel"] = model;
                     TempData["Warning"] = "La reserva especificada no existe. Puedes crear una nueva reserva asociada.";
-                    return RedirectToAction("CrearReservaDesdeFactura");
+                    return Json(new { success = false, html = RenderPartialViewToString("_CreateReserva", new ReservaViewModel()) });
                 }
 
                 var nuevaFactura = new factura
@@ -68,69 +70,6 @@ namespace ExpressTour.Controllers
             }
 
             return PartialView("_CreateFactura", model);
-        }
-
-        // Crear reserva desde factura cuando no existe el ID de reserva
-        public ActionResult CrearReservaDesdeFactura()
-        {
-            var model = new ReservaViewModel
-            {
-                FechaReserva = DateTime.Now,
-                Estado = "activo"
-            };
-
-            // Aquí pasas los datos para que el usuario pueda crear la reserva desde el modal
-            return PartialView("_CreateReserva", model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult CrearReservaDesdeFactura(ReservaViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                using (var db = new ExpressTourDataContext())
-                {
-                    // Crear un cliente si no existe
-                    var nuevoCliente = new cliente
-                    {
-                        nombre = model.NombreCliente,
-                        telefono = model.TelefonoCliente,
-                        direccion = model.DireccionCliente,
-                        correo = ""  // Por ahora lo dejamos vacío, luego se puede agregar el campo
-                    };
-
-                    db.clientes.InsertOnSubmit(nuevoCliente);
-                    db.SubmitChanges();
-
-                    // Crear la reserva asociada al cliente recién creado
-                    var nuevaReserva = new reserva
-                    {
-                        id_cliente = nuevoCliente.id_cliente,
-                        id_paquete = model.IdPaquete,
-                        fecha_reserva = model.FechaReserva,
-                        estado = model.Estado
-                    };
-
-                    db.reservas.InsertOnSubmit(nuevaReserva);
-                    db.SubmitChanges();
-
-                    // Ahora creamos la factura con la nueva reserva creada
-                    var nuevaFactura = new factura
-                    {
-                        id_reserva = nuevaReserva.id_reserva,
-                        total = model.Total,  // Usamos el total que el usuario haya ingresado
-                        fecha_emision = DateTime.Now
-                    };
-
-                    db.facturas.InsertOnSubmit(nuevaFactura);
-                    db.SubmitChanges();
-
-                    TempData["Success"] = "Factura y reserva creadas correctamente.";
-                    return RedirectToAction("Index");
-                }
-            }
-            return PartialView("_CreateReserva", model);
         }
 
 
@@ -227,6 +166,19 @@ namespace ExpressTour.Controllers
             TempData["Success"] = "Factura y su reserva asociada fueron eliminadas.";
             return RedirectToAction("Index");
         }
+
+        protected string RenderPartialViewToString(string viewName, object model)
+        {
+            ViewData.Model = model;
+            using (var sw = new StringWriter())
+            {
+                var viewResult = ViewEngines.Engines.FindPartialView(ControllerContext, viewName);
+                var viewContext = new ViewContext(ControllerContext, viewResult.View, ViewData, TempData, sw);
+                viewResult.View.Render(viewContext, sw);
+                return sw.GetStringBuilder().ToString();
+            }
+        }
+
 
         protected override void Dispose(bool disposing)
         {

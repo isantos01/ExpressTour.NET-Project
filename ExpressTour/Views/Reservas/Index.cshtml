@@ -61,9 +61,25 @@
             @Html.Partial("_CreateReserva", new ModelLayer.DTO.ReservaViewModel
             {
                 FechaReserva = DateTime.Now,
-                Estado = "activo"
+                Estado = "pendiente"
             })
         </div>
     </div>
 </div>
 
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $("#crearReservaModal").on('shown.bs.modal', function () {
+                $.get('@Url.Action("ObtenerPaquetes", "Reservas")', function (data) {
+                    var dropdown = $("#paqueteDropdown");
+                    dropdown.empty();
+                    dropdown.append('<option value="">-- Seleccione un paquete --</option>');
+                    $.each(data, function (index, paquete) {
+                        dropdown.append('<option value="' + paquete.Id + '">' + paquete.Nombre + '</option>');
+                    });
+                });
+            });
+        });
+    </script>
+}

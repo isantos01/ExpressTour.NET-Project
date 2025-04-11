@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<ModelLayer.DTO.FacturasViewModel>
+
 @{
     Layout = "~/Views/Shared/_ClientesLayout.cshtml";
     ViewBag.Title = "Listado de Facturas";
@@ -13,17 +14,17 @@
         </button>
     </div>
 
-    @* Mostrar mensajes *@
+    @* Mensajes *@
     @if (TempData["Success"] != null)
     {
-        <div class="alert alert-success">@TempData["Success"]</div>
+        <div class="alert alert-success text-center">@TempData["Success"]</div>
     }
     @if (TempData["Warning"] != null)
     {
-        <div class="alert alert-warning">@TempData["Warning"]</div>
+        <div class="alert alert-warning text-center">@TempData["Warning"]</div>
     }
 
-    <table class="table table-striped">
+    <table class="table table-striped text-center">
         <thead>
             <tr>
                 <th>ID</th>
@@ -42,119 +43,151 @@
                     <td>@factura.Total</td>
                     <td>@factura.Fecha_Emision.ToString("dd/MM/yyyy")</td>
                     <td>
-                        <a href="@Url.Action("Edit", "Facturas")" data-id="@factura.Id" class="btn btn-sm btn-primary editFacturaBtn">Editar</a>
-                        <a href="#" data-id="@factura.Id" class="btn btn-sm btn-danger deleteFacturaBtn">Eliminar</a>
+                        <button type="button" class="btn btn-sm btn-primary editFacturaBtn" data-id="@factura.Id">Editar</button>
+                        <button class="btn btn-sm btn-danger deleteFacturaBtn" data-id="@factura.Id">Eliminar</button>
                     </td>
                 </tr>
             }
         </tbody>
     </table>
+
+    <div class="text-center mt-4">
+        <a href="@Url.Action("Index", "Dashboard")" class="btn btn-secondary btn-sm">Home Dashboard</a>
+    </div>
 </div>
-<div class="text-center mb-4">
-    <div class="text-center mb-4">
-        <a href="@Url.Action("Index", "Dashboard")" class="btn btn-secondary btn-sm">
-            Home Dashboard
-        </a>
-    </div>
 
-    @* Modal: Crear Factura *@
-    <div class="modal fade" id="createFacturaModal" tabindex="-1" aria-labelledby="createFacturaModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                @Html.Action("Create", "Facturas")  @* El modelo se carga desde la acción Create del controlador *@
+<!-- Modal: Crear Factura -->
+<div class="modal fade" id="createFacturaModal" tabindex="-1" aria-labelledby="createFacturaModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="createFacturaModalContent">
+            @Html.Action("Create", "Facturas")
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Editar Factura (cargado dinámicamente) -->
+<div class="modal fade" id="editFacturaModal" tabindex="-1" aria-labelledby="editFacturaModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="editFacturaModalContent"></div>
+    </div>
+</div>
+
+<!-- Modal: Eliminar Factura -->
+<div class="modal fade" id="deleteFacturaModal" tabindex="-1" aria-labelledby="deleteFacturaModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">Confirmar Eliminación</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">¿Estás seguro de eliminar esta factura?</div>
+            <div class="modal-footer">
+                @using (Html.BeginForm("DeleteComplete", "Facturas", FormMethod.Post, new { id = "deleteFacturaForm" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" id="deleteFacturaId" name="id" />
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-danger">Eliminar definitivamente</button>
+                }
             </div>
         </div>
     </div>
+</div>
 
-    @* Modal: Editar Factura *@
-    <div class="modal fade" id="editFacturaModal" tabindex="-1" aria-labelledby="editFacturaModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content" id="editFacturaModalContent">
-                <!-- Carga AJAX de _EditFactura -->
-            </div>
+<!-- Modal: Crear Reserva desde Factura (usado si la reserva no existe) -->
+<div class="modal fade" id="crearReservaModal" tabindex="-1" aria-labelledby="crearReservaModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="crearReservaModalContent">
+            @Html.Partial("_CreateReserva", new ModelLayer.DTO.ReservaViewModel { FechaReserva = DateTime.Now, Estado = "pendiente" })
         </div>
     </div>
+</div>
 
-    @* Modal: Eliminar Factura *@
-    <div class="modal fade" id="deleteFacturaModal" tabindex="-1" aria-labelledby="deleteFacturaModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header bg-danger text-white">
-                    <h5 class="modal-title" id="deleteFacturaModalLabel">Confirmar Eliminación</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                </div>
-                <div class="modal-body">
-                    ¿Estás seguro de que deseas eliminar esta factura?
-                </div>
-                <div class="modal-footer">
-                    @using (Html.BeginForm("DeleteComplete", "Facturas", FormMethod.Post, new { id = "deleteFacturaForm" }))
-                    {
-                        @Html.AntiForgeryToken()
-                        <input type="hidden" id="deleteFacturaId" name="id" />
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-danger">Eliminar definitivamente</button>
-                    }
-                </div>
-            </div>
-        </div>
-    </div>
-
-    @* Modal: Crear Reserva desde Factura (solo si TempData indica que falta una reserva) *@
-    @if (TempData["MissingReservaId"] != null)
-    {
-        <script>
-            $(document).ready(function () {
-                $('#crearReservaModal').modal('show');
-            });
-        </script>
-
-        <div class="modal fade" id="crearReservaModal" tabindex="-1" aria-labelledby="crearReservaModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    @Html.Partial("_CreateReserva", new ModelLayer.DTO.ReservaViewModel())
-                    {
-                    FechaReserva = DateTime.Now,
-                    Estado = "activo"
-                    })
-                </div>
-            </div>
-        </div>
-    }
-
-    @section Scripts {
-        <script>
+@section Scripts {
+    <script>
         $(document).ready(function () {
-            $(".editFacturaBtn").click(function (e) {
-                e.preventDefault();
-                var facturaId = $(this).data("id");
-                $.get('@Url.Action("Edit", "Facturas")', { id: facturaId }, function (data) {
-                    $("#editFacturaModalContent").html(data);
-                    $("#editFacturaModal").modal("show");
+
+            // Mostrar modal de crear reserva si TempData["MissingReservaId"] está presente
+            const mostrarReserva = '@(TempData["MissingReservaId"] != null ? "true" : "false")';
+            if (mostrarReserva === "true") {
+                $("#crearReservaModal").modal("show");
+            }
+
+            // Cargar opciones del dropdown de paquetes al abrir modal reserva
+            $('#crearReservaModal').on('shown.bs.modal', function () {
+                $.get('@Url.Action("ObtenerPaquetes", "Facturas")', function (data) {
+                    const dropdown = $("#paqueteDropdown");
+                    dropdown.empty().append('<option value="">-- Seleccione un paquete --</option>');
+                    $.each(data, function (i, paquete) {
+                        dropdown.append(`<option value="${paquete.Id}">${paquete.Nombre}</option>`);
+                    });
                 });
             });
 
-            $(".deleteFacturaBtn").click(function (e) {
-                e.preventDefault();
-                var facturaId = $(this).data("id");
-                $("#deleteFacturaId").val(facturaId);
-                $("#deleteFacturaModal").modal("show");
+            // Cargar modal de editar factura
+        $(document).ready(function () {
+
+            // Botón editar con AJAX
+            $(document).on("click", ".editFacturaBtn", function () {
+                const facturaId = $(this).data("id"); // <- esta es la forma correcta
+
+                if (!facturaId) {
+                    alert("ID de factura no válido.");
+                    return;
+                }
+
+                $.get("@Url.Action("Edit", "Facturas")", { id: facturaId }, function (html) {
+                    $("#editFacturaModalContent").html(html);
+                    $("#editFacturaModal").modal("show");
+                }).fail(function () {
+                    alert("No se pudo cargar el formulario de edición.");
+                });
             });
+
         });
 
-        function cargarPaquetesDropdown() {
-            $.get('@Url.Action("ObtenerPaquetes", "Facturas")', function (data) {
-                var dropdown = $('#paqueteDropdown');
-                dropdown.empty();
-                dropdown.append('<option value="">-- Seleccione un paquete --</option>');
-                $.each(data, function (index, item) {
-                    dropdown.append('<option value="' + item.Id + '">' + item.Nombre + '</option>');
-                });
-            });
+        // Validar si se está obteniendo correctamente el ID
+        if (!facturaId) {
+            alert("ID de factura no encontrado.");
+            return;
         }
 
-        $(document).on('show.bs.modal', '#crearReservaModal', function () {
-            cargarPaquetesDropdown();
+        $.get('@Url.Action("Edit", "Facturas")', { id: facturaId }, function (html) {
+            $("#editFacturaModalContent").html(html);
+            $("#editFacturaModal").modal("show");
         });
-        </script>
-    }
-</div>
+
+            // Cargar modal de eliminar factura
+            $(".deleteFacturaBtn").click(function () {
+                const id = $(this).data("id");
+                $("#deleteFacturaId").val(id);
+                $("#deleteFacturaModal").modal("show");
+            });
+
+        });
+
+        // Enviar el formulario de crear factura por AJAX
+        $(document).on("click", "#submitFacturaAjax", function () {
+            const form = $("#createFacturaForm");
+
+            $.ajax({
+                url: form.attr("action"),
+                type: form.attr("method"),
+                data: form.serialize(),
+                success: function (result) {
+                    if (result.requiresReserva) {
+                        // Cerrar el modal de factura y mostrar el modal de reserva con contenido dinámico
+                        $("#createFacturaModal").modal("hide");
+                        $("#crearReservaModal .modal-content").html(result.html);
+                        $("#crearReservaModal").modal("show");
+                    } else {
+                        location.reload(); // Si fue exitosa la creación de la factura
+                    }
+                },
+                error: function () {
+                    alert("Ocurrió un error al guardar la factura.");
+                }
+            });
+        });
+    </script>
+}
