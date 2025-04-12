@@ -1,20 +1,22 @@
 ﻿@model ModelLayer.DTO.TransporteViewModel
 
-<div class="modal-header">
+<div class="modal-header bg-primary text-white">
     <h5 class="modal-title">Crear Transporte</h5>
-    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
 </div>
-@using (Html.BeginForm("Create", "Transportes", FormMethod.Post, new { id = "createTransporteForm" }))
+
+@using (Html.BeginForm("CreateTransporte", "Paquetes", FormMethod.Post, new { id = "createTransporteForm" }))
 {
     @Html.AntiForgeryToken()
     <div class="modal-body">
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
         <div class="mb-3">
             @Html.LabelFor(m => m.Tipo, new { @class = "form-label" })
-            @Html.TextBoxFor(m => m.Tipo, new { @class = "form-control", required = "required" })
+            @Html.TextBoxFor(m => m.Tipo, new { @class = "form-control", placeholder = "Ingrese el tipo de transporte", required = "required" })
             @Html.ValidationMessageFor(m => m.Tipo)
         </div>
-        <!-- Puedes agregar otros campos si tu modelo de transporte lo necesita -->
+        @* Agrega otros campos si tu modelo de Transporte lo requiere *@
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>

@@ -35,9 +35,15 @@
             @Html.LabelFor(m => m.IdTransporte, "ID Transporte", new { @class = "form-label" })
             @Html.TextBoxFor(m => m.IdTransporte, new { @class = "form-control", placeholder = "Ej. 1, 2, 3...", required = "required" })
         </div>
+
+        <div class="text-end">
+            <button type="button" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#createTransporteModal">
+                Crear Transporte
+            </button>
+        </div>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <button type="button" id="submitCreatePaqueteAjax" class="btn btn-success">Guardar</button>
+        <button type="button" id="submitCreatePaqueteAjax" class="btn btn-success">Guardar Paquete</button>
     </div>
 }

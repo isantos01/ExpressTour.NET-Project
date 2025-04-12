@@ -25,7 +25,7 @@ namespace ExpressTour.Controllers
             return View(paquetes);
         }
 
-        // GET: Paquetes/Create (retorna el parcial _CreatePaquete)
+        // GET: Paquetes/Create - Retorna el parcial _CreatePaquete
         public ActionResult Create()
         {
             return PartialView("_CreatePaquete", new PaqueteViewModel());
@@ -38,7 +38,7 @@ namespace ExpressTour.Controllers
         {
             if (!ModelState.IsValid)
             {
-                // Devuelve la vista parcial con los errores para mostrar en el modal
+                // Si hay errores de validación, se devuelve el parcial actualizado con los errores.
                 return Json(new
                 {
                     success = false,
@@ -51,24 +51,54 @@ namespace ExpressTour.Controllers
             var transporte = _transporteService.ObtenerTransportePorId(model.IdTransporte);
             if (transporte == null)
             {
-                // Si el transporte no existe, se retorna JSON para que el front muestre el modal de creación de transporte
+                // Si el transporte no existe, se retorna JSON indicando que se requiere crear transporte.
                 return Json(new
                 {
                     success = false,
                     requiresTransporte = true,
                     message = "No se encontró transporte con el ID ingresado. Por favor, crea uno nuevo.",
-                    html = RenderPartialViewToString("_CreateTransporte", new TransporteViewModel())
+                    html = RenderPartialViewToString("CreateTransporte", new TransporteViewModel())
                 });
             }
 
             // Si el transporte existe, se crea el paquete
             _paqueteService.AgregarPaquete(model);
             TempData["Success"] = "Paquete creado correctamente.";
-            return Json(new
+            return Json(new { success = true, redirectUrl = Url.Action("Index", "Paquetes") });
+        }
+
+        // GET: Paquetes/CreateTransporte (para cargar el modal de creación de transporte)
+        [HttpGet]
+        public ActionResult CreateTransporte()
+        {
+            // Se retorna la vista parcial desde la carpeta Shared
+            return PartialView("~/Views/Shared/_CreateTransporte.cshtml", new TransporteViewModel());
+        }
+
+        // POST: Paquetes/CreateTransporte
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CreateTransporte(TransporteViewModel model)
+        {
+            if (!ModelState.IsValid)
             {
-                success = true,
-                redirectUrl = Url.Action("Index", "Paquetes")
-            });
+                return PartialView("~/Views/Shared/_CreateTransporte.cshtml", model);
+            }
+            if (!_transporteService.ProveedorExiste(model.IdProveedor))
+            {
+                ModelState.AddModelError("IdProveedor", "El proveedor ingresado no existe.");
+                return PartialView("_CreateTransporte", model);
+            }
+
+            var nuevoTransporte = new DataLayer.transporte
+            {
+                tipo = model.Tipo,
+                capacidad = model.Capacidad,
+                id_proveedor = model.IdProveedor
+            };
+
+            int newId = _transporteService.AgregarTransporte(nuevoTransporte);
+            return Json(new { success = true, newTransporteId = newId, message = "Transporte creado correctamente." });
         }
 
         // GET: Paquetes/Edit
@@ -86,20 +116,21 @@ namespace ExpressTour.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(PaqueteViewModel model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                var transporte = _transporteService.ObtenerTransportePorId(model.IdTransporte);
-                if (transporte == null)
-                {
-                    ModelState.AddModelError("IdTransporte", "El ID de transporte ingresado no existe.");
-                    return PartialView("_EditPaquete", model);
-                }
-
-                _paqueteService.ActualizarPaquete(model);
-                TempData["Success"] = "Paquete actualizado correctamente.";
-                return RedirectToAction("Index");
+                return PartialView("_EditPaquete", model);
             }
-            return PartialView("_EditPaquete", model);
+
+            var transporte = _transporteService.ObtenerTransportePorId(model.IdTransporte);
+            if (transporte == null)
+            {
+                ModelState.AddModelError("IdTransporte", "El ID de transporte ingresado no existe.");
+                return PartialView("_EditPaquete", model);
+            }
+
+            _paqueteService.ActualizarPaquete(model);
+            TempData["Success"] = "Paquete actualizado correctamente.";
+            return RedirectToAction("Index");
         }
 
         // POST: Paquetes/Delete (obtiene datos para confirmar la eliminación vía AJAX)
@@ -123,7 +154,7 @@ namespace ExpressTour.Controllers
             return RedirectToAction("Index");
         }
 
-        // Método auxiliar para renderizar parciales a string (útil para respuestas AJAX)
+        // Método auxiliar para renderizar parciales a string (para respuestas AJAX)
         protected string RenderPartialViewToString(string viewName, object model)
         {
             if (string.IsNullOrEmpty(viewName))

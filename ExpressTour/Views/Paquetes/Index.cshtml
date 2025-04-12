@@ -46,12 +46,8 @@
                     <td>@paquete.DuracionDias</td>
                     <td>@paquete.IdTransporte</td>
                     <td>
-                        <button type="button" class="btn btn-sm btn-primary editPaqueteBtn" data-id="@paquete.Id">
-                            Editar
-                        </button>
-                        <button type="button" class="btn btn-sm btn-danger deletePaqueteBtn" data-id="@paquete.Id">
-                            Eliminar
-                        </button>
+                        <button type="button" class="btn btn-sm btn-primary editPaqueteBtn" data-id="@paquete.Id">Editar</button>
+                        <button type="button" class="btn btn-sm btn-danger deletePaqueteBtn" data-id="@paquete.Id">Eliminar</button>
                     </td>
                 </tr>
             }
@@ -59,9 +55,7 @@
     </table>
 
     <div class="text-center mt-4">
-        <a href="@Url.Action("Index", "Dashboard")" class="btn btn-secondary btn-sm">
-            Home Dashboard
-        </a>
+        <a href="@Url.Action("Index", "Dashboard")" class="btn btn-secondary btn-sm">Home Dashboard</a>
     </div>
 </div>
 
@@ -78,15 +72,15 @@
 <div class="modal fade" id="editPaqueteModal" tabindex="-1" aria-labelledby="editPaqueteModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content" id="editPaqueteModalContent">
-            @* Aquí se inyectará el parcial _EditPaquete vía AJAX *@
+            @* Contenido cargado vía AJAX *@
         </div>
     </div>
 </div>
 
-<!-- Modal: Crear Transporte (se mostrará si el ID de transporte ingresado no existe) -->
+<!-- Modal: Crear Transporte -->
 <div class="modal fade" id="createTransporteModal" tabindex="-1" aria-labelledby="createTransporteModalLabel" aria-hidden="true">
     <div class="modal-dialog">
-        <div class="modal-content">
+        <div class="modal-content" id="createTransporteModalContent">
             @Html.Partial("_CreateTransporte", new ModelLayer.DTO.TransporteViewModel())
         </div>
     </div>
@@ -95,22 +89,25 @@
 @section Scripts {
     <script>
         $(document).ready(function () {
-            // Envío del formulario de creación de paquete vía AJAX
+            // Enviar formulario de creación de paquete vía AJAX
             $(document).on("click", "#submitCreatePaqueteAjax", function (e) {
                 e.preventDefault();
                 const form = $("#createPaqueteForm");
-                const data = form.serialize();
                 $.ajax({
                     url: form.attr("action"),
                     type: form.attr("method"),
-                    data: data,
+                    data: form.serialize(),
                     success: function (response) {
                         if (response.success) {
                             window.location.href = response.redirectUrl;
                         } else if (response.requiresTransporte) {
                             alert(response.message);
                             $("#createPaqueteModal").modal("hide");
-                            $("#createTransporteModal").modal("show");
+                            // Llama al método GET para cargar el parcial _CreateTransporte
+                            $.get('@Url.Action("CreateTransporte", "Paquetes")', function(html) {
+                                $("#createTransporteModalContent").html(html);
+                                $("#createTransporteModal").modal("show");
+                            });
                         } else if (response.validationError) {
                             $("#createPaqueteModalContent").html(response.html);
                         } else {
@@ -123,14 +120,10 @@
                 });
             });
 
-            // Botón para editar paquete vía AJAX
+            // Botón para editar paquete (vía AJAX)
             $(document).on("click", ".editPaqueteBtn", function (e) {
                 e.preventDefault();
                 const id = $(this).data("id");
-                if (!id) {
-                    alert("ID de paquete no válido.");
-                    return;
-                }
                 $.get('@Url.Action("Edit", "Paquetes")', { id: id }, function (html) {
                     $("#editPaqueteModalContent").html(html);
                     $("#editPaqueteModal").modal("show");
@@ -139,7 +132,7 @@
                 });
             });
 
-            // Botón para eliminar paquete vía AJAX
+            // Botón para eliminar paquete
             $(document).on("click", ".deletePaqueteBtn", function (e) {
                 e.preventDefault();
                 const id = $(this).data("id");
@@ -147,11 +140,11 @@
                     $.post('@Url.Action("DeleteConfirmed", "Paquetes")', {
                         id: id,
                         __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').first().val()
-                    }, function (response) {
-                        if (response.success) {
+                    }, function (res) {
+                        if (res.success) {
                             location.reload();
                         } else {
-                            alert(response.message);
+                            alert(res.message);
                         }
                     });
                 }

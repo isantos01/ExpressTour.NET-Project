@@ -36,37 +36,40 @@ namespace ExpressTour.Controllers
             return View();
         }
 
-        // POST: Transporte/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(TransporteViewModel model)
+// POST: Transporte/Create
+[HttpPost]
+[ValidateAntiForgeryToken]
+public ActionResult Create(TransporteViewModel model)
+{
+    if (ModelState.IsValid)
+    {
+        // Verificar si el proveedor existe
+        if (!_transporteService.ProveedorExiste(model.IdProveedor))
         {
-            if (ModelState.IsValid)
-            {
-                // Verificar si el proveedor existe
-                if (!_transporteService.ProveedorExiste(model.IdProveedor))
-                {
-                    // Si el proveedor no existe, agregar un error al ModelState
-                    ModelState.AddModelError("IdProveedor", "El proveedor ingresado no existe.");
-                    // Retornar la misma vista con el error
-                    return View("_CreateTransporte", model); // Esto asegura que ModelState se pasa correctamente
-                }
-
-                // Si el proveedor existe, se crea el nuevo transporte
-                var nuevoTransporte = new transporte
-                {
-                    tipo = model.Tipo,
-                    capacidad = model.Capacidad,
-                    id_proveedor = model.IdProveedor
-                };
-
-                _transporteService.AgregarTransporte(nuevoTransporte);
-                return RedirectToAction("Index"); // Redirigir al índice de transportes si la creación es exitosa
-            }
-
-            // Si el modelo no es válido, devuelve la vista con el error
+            // Agrega error al ModelState si no se encontró el proveedor
+            ModelState.AddModelError("IdProveedor", "El proveedor ingresado no existe.");
+            // Retorna la vista parcial con el modelo y los errores para que se muestren en el modal
             return View("_CreateTransporte", model);
         }
+        
+        // Crear la entidad "transporte" a partir del ViewModel
+        var nuevoTransporte = new transporte
+        {
+            tipo = model.Tipo,
+            capacidad = model.Capacidad,
+            id_proveedor = model.IdProveedor
+        };
+        
+        // Llama al servicio para agregar el transporte y obtener el ID del nuevo registro
+        int newId = _transporteService.AgregarTransporte(nuevoTransporte);
+        
+        // Redirige al índice de transportes (podrías mostrar un mensaje de éxito en TempData si lo deseas)
+        return RedirectToAction("Index");
+    }
+    
+    // Si el modelo no es válido, retorna la vista parcial para que se corrijan los errores.
+    return View("_CreateTransporte", model);
+}
 
 
         // GET: Transporte/Edit/5
