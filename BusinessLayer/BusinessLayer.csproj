@@ -52,12 +52,15 @@
     <Compile Include="Repository\IClienteRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\IFacturasRepository.cs" />
+    <Compile Include="Repository\IProveedorRepository.cs" />
     <Compile Include="Repository\ITransporteRepository.cs" />
     <Compile Include="Repository\IReservaRepository.cs" />
+    <Compile Include="Repository\ProveedorRepository.cs" />
     <Compile Include="Repository\ReservaRepository.cs" />
     <Compile Include="Repository\TransporteRepository.cs" />
     <Compile Include="Services\ClienteService.cs" />
     <Compile Include="Services\FacturasService.cs" />
+    <Compile Include="Services\ProveedorService.cs" />
     <Compile Include="Services\ReservaService.cs" />
     <Compile Include="Services\TransporteService.cs" />
   </ItemGroup>

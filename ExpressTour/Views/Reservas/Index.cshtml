@@ -34,15 +34,8 @@
                     <td>@reserva.FechaReserva.ToShortDateString()</td>
                     <td>@reserva.Estado</td>
                     <td>
-                        <a href="@Url.Action("Edit", "Reservas", new { id = reserva.Id })" class="btn btn-sm btn-primary">Editar</a>
-                        @using (Html.BeginForm("Delete", "Reservas", FormMethod.Post))
-                        {
-                            @Html.AntiForgeryToken()
-                            @Html.Hidden("id", reserva.Id)
-                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('¿Estás seguro que deseas eliminar esta reserva?');">
-                                Eliminar
-                            </button>
-                        }
+                        <button type="button" class="btn btn-sm btn-primary editReservaBtn" data-id="@reserva.Id">Editar</button>
+                        <button type="button" class="btn btn-sm btn-danger deleteReservaBtn" data-id="@reserva.Id">Eliminar</button>
                     </td>
                 </tr>
             }
@@ -67,18 +60,76 @@
     </div>
 </div>
 
+<!-- Modal: Editar Reserva -->
+<div class="modal fade" id="editReservaModal" tabindex="-1" aria-labelledby="editReservaModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="editReservaModalContent">
+            @* Se inyectará por AJAX *@
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Confirmar Eliminación de Reserva -->
+<div class="modal fade" id="deleteReservaModal" tabindex="-1" aria-labelledby="deleteReservaModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="deleteReservaModalLabel">Confirmar Eliminación de Reserva</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                ¿Estás seguro de que deseas eliminar esta reserva?
+            </div>
+            <div class="modal-footer">
+                @using (Html.BeginForm("Delete", "Reservas", FormMethod.Post, new { id = "deleteReservaForm" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" id="deleteReservaId" name="id" />
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-danger">Eliminar definitivamente</button>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
 @section Scripts {
     <script>
+        // Cargar dropdown de paquetes al abrir el modal de crear reserva
         $(document).ready(function () {
-            $("#crearReservaModal").on('shown.bs.modal', function () {
+            $('#createReservaModal').on('shown.bs.modal', function () {
                 $.get('@Url.Action("ObtenerPaquetes", "Reservas")', function (data) {
-                    var dropdown = $("#paqueteDropdown");
-                    dropdown.empty();
-                    dropdown.append('<option value="">-- Seleccione un paquete --</option>');
-                    $.each(data, function (index, paquete) {
-                        dropdown.append('<option value="' + paquete.Id + '">' + paquete.Nombre + '</option>');
-                    });
+                    const dropdown = $('#paqueteDropdown');
+                    if (dropdown.length) {
+                        dropdown.empty().append('<option value="">-- Seleccione un paquete --</option>');
+                        $.each(data, function (i, item) {
+                            dropdown.append(`<option value="${item.Id}">${item.Nombre}</option>`);
+                        });
+                    }
                 });
+            });
+
+            // Botón para editar reserva
+            $(document).on("click", ".editReservaBtn", function (e) {
+                e.preventDefault();
+                const id = $(this).data("id");
+                $.get('@Url.Action("Edit", "Reservas")', { id: id }, function (html) {
+                    $("#editReservaModalContent").html(html);
+                    $("#editReservaModal").modal("show");
+                }).fail(function () {
+                    alert("Error al cargar la vista de edición.");
+                });
+            });
+
+            // Botón para eliminar reserva
+            $(".deleteReservaBtn").click(function (e) {
+                e.preventDefault();
+                const id = $(this).data("id");
+                $("#deleteReservaId").val(id);
+                $("#deleteReservaModal").modal("show");
             });
         });
     </script>

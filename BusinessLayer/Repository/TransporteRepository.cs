@@ -71,27 +71,55 @@ namespace BusinessLayer.Repository
         public void DeleteTransporteCascade(int id)
         {
             var transporteToDelete = GetTransporteById(id);
-            if (transporteToDelete != null)
+            if (transporteToDelete == null) return;
+
+            // Buscar los paquetes asociados al transporte
+            var paquetes = _db.paquetes.Where(p => p.id_transporte == id).ToList();
+
+            foreach (var paquete in paquetes)
             {
-                // Eliminar las paquetes asociadas
-                var paquetesToDelete = _db.paquetes.Where(r => r.id_transporte == id).ToList();
-                foreach (var paquete in paquetesToDelete)
+                // 1. Eliminar opiniones relacionadas al paquete
+                var opiniones = _db.opiniones_clientes.Where(o => o.id_paquete == paquete.id_paquete).ToList();
+                if (opiniones.Any())
                 {
-                    // Eliminar las paquete_excursiones asociadas a cada paquete
-                    var excursionesToDelete = _db.paquetes_excursiones.Where(f => f.id_paquete == paquete.id_paquete).ToList();
-                    if (excursionesToDelete.Any())
+                    _db.opiniones_clientes.DeleteAllOnSubmit(opiniones);
+                }
+
+                // 2. Eliminar reservas del paquete
+                var reservas = _db.reservas.Where(r => r.id_paquete == paquete.id_paquete).ToList();
+                foreach (var reserva in reservas)
+                {
+                    // 2.1. Eliminar facturas asociadas a la reserva
+                    var facturas = _db.facturas.Where(f => f.id_reserva == reserva.id_reserva).ToList();
+                    if (facturas.Any())
                     {
-                        _db.paquetes_excursiones.DeleteAllOnSubmit(excursionesToDelete);
+                        _db.facturas.DeleteAllOnSubmit(facturas);
                     }
                 }
-                if (paquetesToDelete.Any())
+
+                if (reservas.Any())
                 {
-                    _db.paquetes.DeleteAllOnSubmit(paquetesToDelete);
+                    _db.reservas.DeleteAllOnSubmit(reservas);
                 }
-                _db.transportes.DeleteOnSubmit(transporteToDelete);
-                _db.SubmitChanges();
+
+                // 3. Eliminar relaciones con excursiones (paquetes_excursiones)
+                var excursiones = _db.paquetes_excursiones.Where(pe => pe.id_paquete == paquete.id_paquete).ToList();
+                if (excursiones.Any())
+                {
+                    _db.paquetes_excursiones.DeleteAllOnSubmit(excursiones);
+                }
+
+                // 4. Finalmente, eliminar el paquete
+                _db.paquetes.DeleteOnSubmit(paquete);
             }
+
+            // 5. Finalmente, eliminar el transporte
+            _db.transportes.DeleteOnSubmit(transporteToDelete);
+
+            // 6. Guardar cambios
+            _db.SubmitChanges();
         }
+
         public bool ProveedorExiste(int idProveedor)
         {
             // tabla proveesores _db.proveedores

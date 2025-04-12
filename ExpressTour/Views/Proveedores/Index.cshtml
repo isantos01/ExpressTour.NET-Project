@@ -1,0 +1,165 @@
+﻿@model IEnumerable<ModelLayer.DTO.ProveedorViewModel>
+
+@{
+    Layout = "~/Views/Shared/_ClientesLayout.cshtml";
+    ViewBag.Title = "Listado de Proveedores";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Listado de Proveedores</h2>
+
+    <div class="text-center mb-4">
+        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createProveedorModal">
+            Agregar Proveedor
+        </button>
+    </div>
+
+    @* Mensajes *@
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success text-center">@TempData["Success"]</div>
+    }
+    @if (TempData["Warning"] != null)
+    {
+        <div class="alert alert-warning text-center">@TempData["Warning"]</div>
+    }
+
+    <table class="table table-striped text-center">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre Proveedor</th>
+                <th>Nombre Contacto</th>
+                <th>Teléfono</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var proveedor in Model)
+            {
+                <tr>
+                    <td>@proveedor.Id</td>
+                    <td>@proveedor.NombreProveedor</td>
+                    <td>@proveedor.NombreContacto</td>
+                    <td>@proveedor.Telefono</td>
+                    <td>
+                        <button type="button" class="btn btn-sm btn-primary editProveedorBtn" data-id="@proveedor.Id">Editar</button>
+                        <button type="button" class="btn btn-sm btn-danger deleteProveedorBtn" data-id="@proveedor.Id">Eliminar</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="text-center mt-4">
+        <a href="@Url.Action("Index", "Dashboard")" class="btn btn-secondary btn-sm">Home Dashboard</a>
+    </div>
+</div>
+
+<!-- Modales -->
+<!-- Modal Crear -->
+<div class="modal fade" id="createProveedorModal" tabindex="-1" aria-labelledby="createProveedorModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="createProveedorModalContent">
+            @Html.Action("Create", "Proveedores")
+        </div>
+    </div>
+</div>
+
+<!-- Modal Editar -->
+<div class="modal fade" id="editProveedorModal" tabindex="-1" aria-labelledby="editProveedorModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="editProveedorModalContent">
+            @* Se cargará por AJAX *@
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Confirmar Eliminación de Proveedor -->
+<div class="modal fade" id="deleteProveedorModal" tabindex="-1" aria-labelledby="deleteProveedorModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="deleteProveedorModalLabel">Confirmar Eliminación</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                ¿Estás seguro de eliminar este proveedor?
+            </div>
+            <div class="modal-footer">
+                @using (Html.BeginForm("DeleteConfirmed", "Proveedores", FormMethod.Post, new { id = "deleteProveedorForm" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" id="deleteProveedorId" name="id" />
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-danger">Eliminar definitivamente</button>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+
+            // Botón para eliminar proveedor
+            $(".deleteProveedorBtn").click(function (e) {
+                e.preventDefault();
+                var id = $(this).data("id");
+
+                $.post('@Url.Action("Delete", "Proveedores")', { id: id }, function (response) {
+                    if (response.success) {
+                        // Llenamos el modal con los datos del proveedor
+                        $("#deleteProveedorId").val(response.id);
+                        $("#deleteProveedorModalLabel").text("¿Estás seguro de eliminar al proveedor '" + response.nombre + "'?");
+                        $("#deleteProveedorModal").modal("show");
+                    } else {
+                        alert(response.message || "No se pudo cargar el proveedor.");
+                    }
+                });
+            });
+
+            // Confirmar eliminación definitiva desde el modal
+            $("#deleteProveedorForm").submit(function (e) {
+                e.preventDefault();
+                const id = $("#deleteProveedorId").val();
+
+                $.ajax({
+                    url: '@Url.Action("DeleteConfirmed", "Proveedores")',
+                    type: 'POST',
+                    data: {
+                        id: id,
+                        __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            location.reload();
+                        } else {
+                            alert(response.message || "Ocurrió un error al eliminar.");
+                        }
+                    },
+                    error: function () {
+                        alert("Error al intentar eliminar el proveedor.");
+                    }
+                });
+            });
+
+            // Botón para editar proveedor (por si lo necesitas también)
+            $(".editProveedorBtn").click(function () {
+                const id = $(this).data("id");
+
+                $.get('@Url.Action("Edit", "Proveedores")', { id: id }, function (html) {
+                    $("#editProveedorModalContent").html(html);
+                    $("#editProveedorModal").modal("show");
+                }).fail(function () {
+                    alert("No se pudo cargar el formulario de edición.");
+                });
+            });
+        });
+    </script>
+}
+
+

@@ -193,6 +193,14 @@
                 $("#deleteClientModal").modal("show");
             });
         });
+
+        $(".deleteFacturaBtn").click(function (e) {
+            e.preventDefault();
+            const id = $(this).data("id");
+            $("#deleteFacturaId").val(id);
+            $("#deleteFacturaModal").modal("show");
+        });
+
     </script>
 
 

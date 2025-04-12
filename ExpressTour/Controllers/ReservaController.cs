@@ -3,6 +3,8 @@ using System.Web.Mvc;
 using BusinessLayer.Services;
 using ModelLayer.DTO;
 using DataLayer;
+using System.Data.Linq;
+using System;
 
 namespace ExpressTour.Controllers
 {
@@ -43,7 +45,8 @@ namespace ExpressTour.Controllers
         {
             using (var db = new ExpressTourDataContext())
             {
-                var paquetes = db.paquetes.Select(p => new {
+                var paquetes = db.paquetes.Select(p => new
+                {
                     Id = p.id_paquete,
                     Nombre = p.nombre
                 }).ToList();
@@ -149,27 +152,35 @@ namespace ExpressTour.Controllers
         {
             using (var db = new ExpressTourDataContext())
             {
+                // Eager loading del cliente asociado (opcional, pero recomendable)
+                var dlo = new DataLoadOptions();
+                dlo.LoadWith<reserva>(r => r.cliente);
+                db.LoadOptions = dlo;
+
                 var reserva = db.reservas.FirstOrDefault(r => r.id_reserva == id);
-                if (reserva == null)
-                    return HttpNotFound();
+                if (reserva == null) return HttpNotFound();
+
+                // Llenar ViewBag.Paquetes
+                ViewBag.Paquetes = db.paquetes
+                    .Select(p => new SelectListItem
+                    {
+                        Value = p.id_paquete.ToString(),
+                        Text = p.nombre
+                    })
+                    .ToList();
 
                 var model = new ReservaViewModel
                 {
                     Id = reserva.id_reserva,
                     IdPaquete = reserva.id_paquete,
-                    FechaReserva = (System.DateTime)reserva.fecha_reserva,
+                    FechaReserva = reserva.fecha_reserva ?? DateTime.Now,
                     Estado = reserva.estado,
                     NombreCliente = reserva.cliente.nombre,
-                    DireccionCliente = reserva.cliente.direccion,
-                    TelefonoCliente = reserva.cliente.telefono
+                    TelefonoCliente = reserva.cliente.telefono,
+                    DireccionCliente = reserva.cliente.direccion
                 };
 
-                ViewBag.Paquetes = db.paquetes.Select(p => new SelectListItem
-                {
-                    Value = p.id_paquete.ToString(),
-                    Text = p.nombre
-                });
-
+                // IMPORTANTE: devolver PartialView, no View
                 return PartialView("_EditReserva", model);
             }
         }

@@ -7,13 +7,15 @@
 
     <div class="modal-header">
         <h5 class="modal-title">Editar Reserva</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
     </div>
-
     <div class="modal-body">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <!-- CAMPOS PARA CLIENTE -->
         <div class="mb-3">
             @Html.LabelFor(m => m.NombreCliente, "Nombre del Cliente", new { @class = "form-label" })
-            @Html.TextBoxFor(m => m.NombreCliente, new { @class = "form-control", placeholder = "Nombre del Cliente", required = "required" })
+            @Html.TextBoxFor(m => m.NombreCliente, new { @class = "form-control", placeholder = "Nombre del Cliente" })
         </div>
         <div class="mb-3">
             @Html.LabelFor(m => m.DireccionCliente, "Dirección del Cliente", new { @class = "form-label" })
@@ -23,16 +25,29 @@
             @Html.LabelFor(m => m.TelefonoCliente, "Teléfono del Cliente", new { @class = "form-label" })
             @Html.TextBoxFor(m => m.TelefonoCliente, new { @class = "form-control", placeholder = "Teléfono del Cliente" })
         </div>
+
+        <!-- DROPDOWN PAQUETES -->
         <div class="mb-3">
             @Html.Label("Paquete", new { @class = "form-label" })
-            @Html.DropDownListFor(m => m.IdPaquete, new SelectList(ViewBag.Paquetes as IEnumerable<SelectListItem>, "Value", "Text"), "Seleccione un paquete", new { @class = "form-control", required = "required" })
+            @Html.DropDownListFor(m => m.IdPaquete,
+                new SelectList(ViewBag.Paquetes as IEnumerable<SelectListItem>, "Value", "Text", Model.IdPaquete),
+                "Seleccione un paquete",
+                new { @class = "form-select" }
+            )
         </div>
+
+        <!-- FECHA -->
         <div class="mb-3">
-            @Html.LabelFor(m => m.Estado, new { @class = "form-label" })
-            @Html.TextBoxFor(m => m.Estado, new { @class = "form-control", required = "required" })
+            @Html.LabelFor(m => m.FechaReserva, "Fecha Reserva", new { @class = "form-label" })
+            @Html.TextBoxFor(m => m.FechaReserva, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
+        </div>
+
+        <!-- ESTADO -->
+        <div class="mb-3">
+            @Html.LabelFor(m => m.Estado, "Estado", new { @class = "form-label" })
+            @Html.TextBoxFor(m => m.Estado, new { @class = "form-control" })
         </div>
     </div>
-
     <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
         <button type="submit" class="btn btn-primary">Guardar Cambios</button>

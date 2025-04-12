@@ -1,5 +1,4 @@
 ﻿@model IEnumerable<ModelLayer.DTO.FacturasViewModel>
-
 @{
     Layout = "~/Views/Shared/_ClientesLayout.cshtml";
     ViewBag.Title = "Listado de Facturas";
@@ -14,7 +13,7 @@
         </button>
     </div>
 
-    @* Mensajes *@
+    @* Mostrar mensajes si existen *@
     @if (TempData["Success"] != null)
     {
         <div class="alert alert-success text-center">@TempData["Success"]</div>
@@ -44,7 +43,7 @@
                     <td>@factura.Fecha_Emision.ToString("dd/MM/yyyy")</td>
                     <td>
                         <button type="button" class="btn btn-sm btn-primary editFacturaBtn" data-id="@factura.Id">Editar</button>
-                        <button class="btn btn-sm btn-danger deleteFacturaBtn" data-id="@factura.Id">Eliminar</button>
+                        <button type="button" class="btn btn-sm btn-danger deleteFacturaBtn" data-id="@factura.Id">Eliminar</button>
                     </td>
                 </tr>
             }
@@ -56,7 +55,7 @@
     </div>
 </div>
 
-<!-- Modal: Crear Factura -->
+@* Modal: Crear Factura *@
 <div class="modal fade" id="createFacturaModal" tabindex="-1" aria-labelledby="createFacturaModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content" id="createFacturaModalContent">
@@ -65,22 +64,26 @@
     </div>
 </div>
 
-<!-- Modal: Editar Factura (cargado dinámicamente) -->
+@* Modal: Editar Factura (cargado vía AJAX) *@
 <div class="modal fade" id="editFacturaModal" tabindex="-1" aria-labelledby="editFacturaModalLabel" aria-hidden="true">
     <div class="modal-dialog">
-        <div class="modal-content" id="editFacturaModalContent"></div>
+        <div class="modal-content" id="editFacturaModalContent">
+            @* Se cargará el partial view _EditFactura vía AJAX *@
+        </div>
     </div>
 </div>
 
-<!-- Modal: Eliminar Factura -->
+@* Modal: Eliminar Factura *@
 <div class="modal fade" id="deleteFacturaModal" tabindex="-1" aria-labelledby="deleteFacturaModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header bg-danger text-white">
-                <h5 class="modal-title">Confirmar Eliminación</h5>
+                <h5 class="modal-title" id="deleteFacturaModalLabel">Confirmar Eliminación</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
             </div>
-            <div class="modal-body">¿Estás seguro de eliminar esta factura?</div>
+            <div class="modal-body">
+                ¿Estás seguro de que deseas eliminar esta factura?
+            </div>
             <div class="modal-footer">
                 @using (Html.BeginForm("DeleteComplete", "Facturas", FormMethod.Post, new { id = "deleteFacturaForm" }))
                 {
@@ -94,7 +97,16 @@
     </div>
 </div>
 
-<!-- Modal: Crear Reserva desde Factura (usado si la reserva no existe) -->
+@* Modal: Crear Reserva desde Factura (se muestra si TempData["MissingReservaId"] está presente) *@
+@if (TempData["MissingReservaId"] != null)
+{
+    <script>
+        $(document).ready(function () {
+            $('#crearReservaModal').modal('show');
+        });
+    </script>
+}
+
 <div class="modal fade" id="crearReservaModal" tabindex="-1" aria-labelledby="crearReservaModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content" id="crearReservaModalContent">
@@ -106,37 +118,15 @@
 @section Scripts {
     <script>
         $(document).ready(function () {
-
-            // Mostrar modal de crear reserva si TempData["MissingReservaId"] está presente
-            const mostrarReserva = '@(TempData["MissingReservaId"] != null ? "true" : "false")';
-            if (mostrarReserva === "true") {
-                $("#crearReservaModal").modal("show");
-            }
-
-            // Cargar opciones del dropdown de paquetes al abrir modal reserva
-            $('#crearReservaModal').on('shown.bs.modal', function () {
-                $.get('@Url.Action("ObtenerPaquetes", "Facturas")', function (data) {
-                    const dropdown = $("#paqueteDropdown");
-                    dropdown.empty().append('<option value="">-- Seleccione un paquete --</option>');
-                    $.each(data, function (i, paquete) {
-                        dropdown.append(`<option value="${paquete.Id}">${paquete.Nombre}</option>`);
-                    });
-                });
-            });
-
-            // Cargar modal de editar factura
-        $(document).ready(function () {
-
-            // Botón editar con AJAX
-            $(document).on("click", ".editFacturaBtn", function () {
-                const facturaId = $(this).data("id"); // <- esta es la forma correcta
-
+            // Acción para editar factura mediante AJAX
+            $(document).on("click", ".editFacturaBtn", function (e) {
+                e.preventDefault();
+                const facturaId = $(this).data("id");
                 if (!facturaId) {
                     alert("ID de factura no válido.");
                     return;
                 }
-
-                $.get("@Url.Action("Edit", "Facturas")", { id: facturaId }, function (html) {
+                $.get('@Url.Action("Edit", "Facturas")', { id: facturaId }, function (html) {
                     $("#editFacturaModalContent").html(html);
                     $("#editFacturaModal").modal("show");
                 }).fail(function () {
@@ -144,44 +134,42 @@
                 });
             });
 
-        });
-
-        // Validar si se está obteniendo correctamente el ID
-        if (!facturaId) {
-            alert("ID de factura no encontrado.");
-            return;
-        }
-
-        $.get('@Url.Action("Edit", "Facturas")', { id: facturaId }, function (html) {
-            $("#editFacturaModalContent").html(html);
-            $("#editFacturaModal").modal("show");
-        });
-
-            // Cargar modal de eliminar factura
-            $(".deleteFacturaBtn").click(function () {
+            // Acción para eliminar factura
+            $(".deleteFacturaBtn").click(function (e) {
+                e.preventDefault();
                 const id = $(this).data("id");
                 $("#deleteFacturaId").val(id);
                 $("#deleteFacturaModal").modal("show");
             });
 
+            // Cargar opciones del dropdown de paquetes al abrir el modal de crear reserva
+            $(document).on("shown.bs.modal", "#crearReservaModal", function () {
+                $.get('@Url.Action("ObtenerPaquetes", "Facturas")', function (data) {
+                    const dropdown = $("#paqueteDropdown");
+                    if (dropdown.length) {
+                        dropdown.empty().append('<option value="">-- Seleccione un paquete --</option>');
+                        $.each(data, function (i, item) {
+                            dropdown.append(`<option value="${item.Id}">${item.Nombre}</option>`);
+                        });
+                    }
+                });
+            });
         });
 
-        // Enviar el formulario de crear factura por AJAX
+        // Enviar el formulario de crear factura vía AJAX (si lo usas)
         $(document).on("click", "#submitFacturaAjax", function () {
             const form = $("#createFacturaForm");
-
             $.ajax({
                 url: form.attr("action"),
                 type: form.attr("method"),
                 data: form.serialize(),
                 success: function (result) {
                     if (result.requiresReserva) {
-                        // Cerrar el modal de factura y mostrar el modal de reserva con contenido dinámico
                         $("#createFacturaModal").modal("hide");
-                        $("#crearReservaModal .modal-content").html(result.html);
+                        $("#crearReservaModalContent").html(result.html);
                         $("#crearReservaModal").modal("show");
                     } else {
-                        location.reload(); // Si fue exitosa la creación de la factura
+                        location.reload();
                     }
                 },
                 error: function () {
