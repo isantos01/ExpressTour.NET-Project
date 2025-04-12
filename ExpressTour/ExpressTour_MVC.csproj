@@ -126,6 +126,7 @@
     <Compile Include="Controllers\FacturasController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
+    <Compile Include="Controllers\PaquetesController.cs" />
     <Compile Include="Controllers\ProveedoresController.cs" />
     <Compile Include="Controllers\ReservaController.cs" />
     <Compile Include="Controllers\TransportesController.cs" />
@@ -222,7 +223,7 @@
     <Content Include="Views\Clientes\ConfirmDelete.cshtml" />
     <Content Include="Views\Transportes\Index.cshtml" />
     <Content Include="Views\Transportes\_EditTransporte.cshtml" />
-    <Content Include="Views\Transportes\_CreateTransporte.cshtml" />
+    <Content Include="Views\Shared\_CreateTransporte.cshtml" />
     <Content Include="Views\Transportes\ConfirmDelete.cshtml" />
     <Content Include="Views\Facturas\_CreateFactura.cshtml" />
     <Content Include="Views\Facturas\_EditFactura.cshtml" />
@@ -235,6 +236,9 @@
     <Content Include="Views\Proveedores\_EditProveedor.cshtml" />
     <Content Include="Views\Proveedores\Index.cshtml" />
     <Content Include="Views\Proveedores\_ConfirmDeleteProveedor.cshtml" />
+    <Content Include="Views\Paquetes\_CreatePaquete.cshtml" />
+    <Content Include="Views\Paquetes\Index.cshtml" />
+    <Content Include="Views\Paquetes\_EditPaquete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

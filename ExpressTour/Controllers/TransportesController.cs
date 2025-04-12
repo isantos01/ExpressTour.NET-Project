@@ -116,7 +116,7 @@ namespace ExpressTour.Controllers
             {
                 // Si no se puede eliminar porque tiene relaciones, redirige a una acción de confirmación
                 TempData["Warning"] = "El transporte tiene registros asociados. Eliminar este transporte eliminará también sus paquetes y excursiones. ¿Desea proceder?";
-                return RedirectToAction("ConfirmDelete", new { id = id });
+                return RedirectToAction("ConfirmDelete", new { id });
             }
             else
             {

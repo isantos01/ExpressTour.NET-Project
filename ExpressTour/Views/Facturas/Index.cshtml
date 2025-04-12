@@ -68,7 +68,7 @@
 <div class="modal fade" id="editFacturaModal" tabindex="-1" aria-labelledby="editFacturaModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content" id="editFacturaModalContent">
-            @* Se cargará el partial view _EditFactura vía AJAX *@
+            @* Aquí se cargará el _EditFactura parcial via AJAX *@
         </div>
     </div>
 </div>
@@ -97,7 +97,7 @@
     </div>
 </div>
 
-@* Modal: Crear Reserva desde Factura (se muestra si TempData["MissingReservaId"] está presente) *@
+@* Modal: Crear Reserva desde Factura (se muestra si no existe la reserva) *@
 @if (TempData["MissingReservaId"] != null)
 {
     <script>
@@ -118,7 +118,7 @@
 @section Scripts {
     <script>
         $(document).ready(function () {
-            // Acción para editar factura mediante AJAX
+            // Acciones para editar factura mediante AJAX
             $(document).on("click", ".editFacturaBtn", function (e) {
                 e.preventDefault();
                 const facturaId = $(this).data("id");
@@ -144,7 +144,7 @@
 
             // Cargar opciones del dropdown de paquetes al abrir el modal de crear reserva
             $(document).on("shown.bs.modal", "#crearReservaModal", function () {
-                $.get('@Url.Action("ObtenerPaquetes", "Facturas")', function (data) {
+                $.get("@Url.Action("ObtenerPaquetes", "Facturas")", function (data) {
                     const dropdown = $("#paqueteDropdown");
                     if (dropdown.length) {
                         dropdown.empty().append('<option value="">-- Seleccione un paquete --</option>');
@@ -156,7 +156,7 @@
             });
         });
 
-        // Enviar el formulario de crear factura vía AJAX (si lo usas)
+        // Enviar el formulario de crear factura mediante AJAX (si lo usas)
         $(document).on("click", "#submitFacturaAjax", function () {
             const form = $("#createFacturaForm");
             $.ajax({
@@ -165,11 +165,12 @@
                 data: form.serialize(),
                 success: function (result) {
                     if (result.requiresReserva) {
+                        // Cierra el modal de factura y abre el modal de reserva con el contenido devuelto
                         $("#createFacturaModal").modal("hide");
                         $("#crearReservaModalContent").html(result.html);
                         $("#crearReservaModal").modal("show");
                     } else {
-                        location.reload();
+                        location.reload(); // Recarga la página si la factura se creó correctamente
                     }
                 },
                 error: function () {
