@@ -43,7 +43,7 @@ namespace ExpressTour.Controllers
                 {
                     success = false,
                     validationError = true,
-                    html = RenderPartialViewToString("_CreatePaquete", model)
+                    html = RenderPartialViewToString("_CreateTransporte", model)
                 });
             }
 
@@ -57,7 +57,7 @@ namespace ExpressTour.Controllers
                     success = false,
                     requiresTransporte = true,
                     message = "No se encontró transporte con el ID ingresado. Por favor, crea uno nuevo.",
-                    html = RenderPartialViewToString("CreateTransporte", new TransporteViewModel())
+                    html = RenderPartialViewToString("_CreateTransporte", new TransporteViewModel())
                 });
             }
 
@@ -71,8 +71,7 @@ namespace ExpressTour.Controllers
         [HttpGet]
         public ActionResult CreateTransporte()
         {
-            // Se retorna la vista parcial desde la carpeta Shared
-            return PartialView("~/Views/Shared/_CreateTransporte.cshtml", new TransporteViewModel());
+            return PartialView("_CreateTransporte", new TransporteViewModel());
         }
 
         // POST: Paquetes/CreateTransporte
@@ -82,23 +81,22 @@ namespace ExpressTour.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return PartialView("~/Views/Shared/_CreateTransporte.cshtml", model);
+                return PartialView("_CreateTransporte", model);
             }
             if (!_transporteService.ProveedorExiste(model.IdProveedor))
             {
                 ModelState.AddModelError("IdProveedor", "El proveedor ingresado no existe.");
                 return PartialView("_CreateTransporte", model);
             }
-
             var nuevoTransporte = new DataLayer.transporte
             {
                 tipo = model.Tipo,
                 capacidad = model.Capacidad,
                 id_proveedor = model.IdProveedor
             };
-
-            int newId = _transporteService.AgregarTransporte(nuevoTransporte);
-            return Json(new { success = true, newTransporteId = newId, message = "Transporte creado correctamente." });
+            int nuevoId = _transporteService.AgregarTransporte(nuevoTransporte);
+            // Devuelve JSON para que el cliente (AJAX) sepa que se creó correctamente y use el nuevo ID
+            return Json(new { success = true, newTransporteId = nuevoId, message = "Transporte creado correctamente." });
         }
 
         // GET: Paquetes/Edit

@@ -16,10 +16,22 @@
             @Html.TextBoxFor(m => m.Tipo, new { @class = "form-control", placeholder = "Ingrese el tipo de transporte", required = "required" })
             @Html.ValidationMessageFor(m => m.Tipo)
         </div>
-        @* Agrega otros campos si tu modelo de Transporte lo requiere *@
+
+        <div class="mb-3">
+            @Html.LabelFor(m => m.Capacidad, new { @class = "form-label" })
+            @Html.TextBoxFor(m => m.Capacidad, new { @class = "form-control", placeholder = "Ingrese la capacidad", type = "number", required = "required" })
+            @Html.ValidationMessageFor(m => m.Capacidad)
+        </div>
+
+        <div class="mb-3">
+            @Html.LabelFor(m => m.IdProveedor, new { @class = "form-label" })
+            @Html.TextBoxFor(m => m.IdProveedor, new { @class = "form-control", placeholder = "ID del proveedor", type = "number", required = "required" })
+            @Html.ValidationMessageFor(m => m.IdProveedor)
+        </div>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <button type="submit" class="btn btn-primary">Guardar Transporte</button>
+        <!-- Botón de tipo "button" para que se capture vía AJAX -->
+        <button type="button" id="submitTransporteAjax" class="btn btn-primary">Guardar Transporte</button>
     </div>
 }

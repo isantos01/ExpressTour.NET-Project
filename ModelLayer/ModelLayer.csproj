@@ -66,6 +66,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DTO\ExcursionesViewModel.cs" />
     <Compile Include="DTO\PaqueteViewModel.cs" />
     <Compile Include="DTO\ProveedorViewModel.cs" />
     <Compile Include="DTO\FacturasViewModel.cs" />

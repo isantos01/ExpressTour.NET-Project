@@ -81,7 +81,7 @@
 <div class="modal fade" id="createTransporteModal" tabindex="-1" aria-labelledby="createTransporteModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content" id="createTransporteModalContent">
-            @Html.Partial("_CreateTransporte", new ModelLayer.DTO.TransporteViewModel())
+            @* Este contenido se carga dinámicamente vía AJAX *@
         </div>
     </div>
 </div>
@@ -103,7 +103,7 @@
                         } else if (response.requiresTransporte) {
                             alert(response.message);
                             $("#createPaqueteModal").modal("hide");
-                            // Llama al método GET para cargar el parcial _CreateTransporte
+                            // Solicitar el parcial _CreateTransporte a través de GET
                             $.get('@Url.Action("CreateTransporte", "Paquetes")', function(html) {
                                 $("#createTransporteModalContent").html(html);
                                 $("#createTransporteModal").modal("show");
@@ -120,7 +120,7 @@
                 });
             });
 
-            // Botón para editar paquete (vía AJAX)
+            // Botón para editar paquete vía AJAX
             $(document).on("click", ".editPaqueteBtn", function (e) {
                 e.preventDefault();
                 const id = $(this).data("id");
@@ -132,7 +132,7 @@
                 });
             });
 
-            // Botón para eliminar paquete
+            // Botón para eliminar paquete vía AJAX
             $(document).on("click", ".deletePaqueteBtn", function (e) {
                 e.preventDefault();
                 const id = $(this).data("id");
@@ -148,6 +148,31 @@
                         }
                     });
                 }
+            });
+
+            // Enviar formulario de creación de transporte vía AJAX
+            $(document).on("click", "#submitTransporteAjax", function (e) {
+                e.preventDefault();
+                const form = $("#createTransporteForm");
+                $.ajax({
+                    url: form.attr("action"),
+                    type: form.attr("method"),
+                    data: form.serialize(),
+                    success: function (response) {
+                        if (response.success) {
+                            // Opcional: asigna el nuevo ID de transporte al campo correspondiente en el formulario de paquete
+                            $("#createPaqueteForm input[name='IdTransporte']").val(response.newTransporteId);
+                            $("#createTransporteModal").modal("hide");
+                            alert(response.message);
+                        } else {
+                            // Muestra el parcial actualizado con errores
+                            $("#createTransporteModalContent").html(response.html);
+                        }
+                    },
+                    error: function () {
+                        alert("Error al crear transporte.");
+                    }
+                });
             });
         });
     </script>
