@@ -170,8 +170,8 @@
     <Content Include="Content\Image\img\portfolio\4.jpg" />
     <Content Include="Content\Image\img\portfolio\5.jpg" />
     <Content Include="Content\Image\img\portfolio\6.jpg" />
-    <Content Include="Content\Image\img\team\2.jpg" />
     <Content Include="Content\Image\img\team\El mejor.jpg" />
+    <Content Include="Content\Image\img\team\Ivan.jpeg" />
     <Content Include="Content\Image\img\team\Rafael.jpeg" />
     <Content Include="Content\Dashboard.css" />
     <Content Include="Content\Login.css" />
