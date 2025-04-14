@@ -1,0 +1,49 @@
+﻿@model ModelLayer.DTO.PaquetesExcursionesViewModel
+
+<div class="modal-header bg-primary text-white">
+    <h5 class="modal-title">Agregar Paquete-Excursión</h5>
+    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+</div>
+
+@using (Html.BeginForm("Create", "Paquetes_Excursiones", FormMethod.Post, new { id = "createPaquetesExcursionesForm" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="modal-body">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="mb-3">
+            @Html.LabelFor(m => m.IdPaquete, "Paquete", new { @class = "form-label" })
+            @if (Model.ListaPaquetes != null && Model.ListaPaquetes.Any())
+            {
+                @Html.DropDownListFor(m => m.IdPaquete, Model.ListaPaquetes, "-- Seleccione un Paquete --", new { @class = "form-control", required = "required" })
+            }
+            else
+            {
+                <div class="alert alert-warning">
+                    No hay paquetes disponibles. Cree los registros correspondientes.
+                </div>
+            }
+            @Html.ValidationMessageFor(m => m.IdPaquete, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="mb-3">
+            @Html.LabelFor(m => m.IdExcursion, "Excursión", new { @class = "form-label" })
+            @if (Model.ListaExcursiones != null && Model.ListaExcursiones.Any())
+            {
+                @Html.DropDownListFor(m => m.IdExcursion, Model.ListaExcursiones, "-- Seleccione una Excursión --", new { @class = "form-control", required = "required" })
+            }
+            else
+            {
+                <div class="alert alert-warning">
+                    No hay excursiones disponibles. Cree los registros correspondientes.
+                </div>
+            }
+            @Html.ValidationMessageFor(m => m.IdExcursion, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" id="submitCreatePeAjax" class="btn btn-success">Guardar</button>
+    </div>
+}

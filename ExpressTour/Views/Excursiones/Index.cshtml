@@ -1,17 +1,126 @@
-﻿@{
-    Layout = null;
+﻿@model IEnumerable<ModelLayer.DTO.ExcursionesViewModel>
+
+@{
+    Layout = "~/Views/Shared/_ClientesLayout.cshtml";
+    ViewBag.Title = "Listado de Excursiones";
 }
 
-<!DOCTYPE html>
-
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title></title>
-</head>
-<body>
-    <div>
-    
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Listado de Excursiones</h2>
+    <div class="text-center mb-4">
+        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createExcursionModal">
+            Agregar Excursión
+        </button>
     </div>
-</body>
-</html>
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success text-center">@TempData["Success"]</div>
+}
+
+<table class="table table-striped text-center">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Descripción</th>
+            <th>Precio</th>
+            <th>Capacidad</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var excursion in Model)
+        {
+            <tr>
+                <td>@excursion.Id</td>
+                <td>@excursion.Nombre</td>
+                <td>@excursion.Descripcion</td>
+                <td>@excursion.Precio</td>
+                <td>@excursion.Capacidad</td>
+                <td>
+                    <button class="btn btn-sm btn-primary editExcursionBtn" data-id="@excursion.Id">Editar</button>
+                    <button class="btn btn-sm btn-danger deleteExcursionBtn" data-id="@excursion.Id">Eliminar</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="text-center mt-4">
+    <a href="@Url.Action("Index", "Dashboard")" class="btn btn-secondary btn-sm">Home Dashboard</a>
+</div>
+
+<!-- Modal: Crear Excursión -->
+<div class="modal fade" id="createExcursionModal" tabindex="-1" aria-labelledby="createExcursionModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="createExcursionModalContent">
+            @Html.Action("Create", "Excursiones")
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Editar Excursión -->
+<div class="modal fade" id="editExcursionModal" tabindex="-1" aria-labelledby="editExcursionModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="editExcursionModalContent">
+            @* Contenido cargado por AJAX *@
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Eliminar Excursión -->
+<div class="modal fade" id="deleteExcursionModal" tabindex="-1" aria-labelledby="deleteExcursionModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="deleteExcursionModalContent">
+            @* Contenido cargado por AJAX *@
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Submit del formulario Create vía AJAX
+            $(document).on("click", "#submitCreateExcursionAjax", function () {
+                const form = $("#createExcursionForm");
+                $.ajax({
+                    url: form.attr("action"),
+                    type: form.attr("method"),
+                    data: form.serialize(),
+                    success: function (result) {
+                        if (result.success) {
+                            window.location.href = result.redirectUrl;
+                        } else {
+                            $("#createExcursionModalContent").html(result.html);
+                        }
+                    },
+                    error: function () {
+                        alert("Error al crear excursión.");
+                    }
+                });
+            });
+
+        // Botón Editar - carga modal por AJAX
+        $(document).on("click", ".editExcursionBtn", function () {
+            const id = $(this).data("id");
+            $.get('@Url.Action("Edit", "Excursiones")', { id: id }, function (html) {
+                $("#editExcursionModalContent").html(html);
+                $("#editExcursionModal").modal("show");
+            });
+        });
+
+        // Botón Eliminar - carga modal por AJAX
+        $(document).on("click", ".deleteExcursionBtn", function () {
+            const id = $(this).data("id");
+            $.get('@Url.Action("Delete", "Excursiones")', { id: id }, function (html) {
+                $("#deleteExcursionModalContent").html(html);
+                $("#deleteExcursionModal").modal("show");
+            });
+        });
+
+    });
+
+    </script>
+    }

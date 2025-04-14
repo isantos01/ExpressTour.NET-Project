@@ -1,0 +1,154 @@
+﻿@model IEnumerable<ModelLayer.DTO.PaquetesExcursionesViewModel>
+
+@{
+    Layout = "~/Views/Shared/_ClientesLayout.cshtml";
+    ViewBag.Title = "Listado de Paquetes-Excursiones";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Listado de Paquetes-Excursiones</h2>
+
+    <div class="text-center mb-4">
+        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createPeModal">
+            Agregar Paquete-Excursión
+        </button>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success text-center">@TempData["Success"]</div>
+    }
+    @if (TempData["Warning"] != null)
+    {
+        <div class="alert alert-warning text-center">@TempData["Warning"]</div>
+    }
+
+    <table class="table table-striped text-center">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>ID Paquete</th>
+                <th>ID Excursión</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var registro in Model)
+            {
+                <tr>
+                    <td>@registro.Id</td>
+                    <td>@registro.IdPaquete</td>
+                    <td>@registro.IdExcursion</td>
+                    <td>
+                        <button type="button" class="btn btn-sm btn-primary editPeBtn" data-id="@registro.Id">
+                            Editar
+                        </button>
+                        <button type="button" class="btn btn-sm btn-danger deletePeBtn" data-id="@registro.Id">
+                            Eliminar
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="text-center mt-4">
+        <a href="@Url.Action("Index", "Dashboard")" class="btn btn-secondary btn-sm">
+            Home Dashboard
+        </a>
+    </div>
+</div>
+
+<!-- Modal: Crear Paquete-Excursión -->
+<div class="modal fade" id="createPeModal" tabindex="-1" aria-labelledby="createPeModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="createPeModalContent">
+            @Html.Action("Create", "Paquetes_Excursiones")
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Editar Paquete-Excursión -->
+<div class="modal fade" id="editPeModal" tabindex="-1" aria-labelledby="editPeModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="editPeModalContent">
+            @* El contenido se inyecta vía AJAX al presionar el botón de editar *@
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Confirmar Eliminación de Paquete-Excursión -->
+<div class="modal fade" id="deletePeModal" tabindex="-1" aria-labelledby="deletePeModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="deletePeModalLabel">Confirmar Eliminación</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                ¿Estás seguro de que deseas eliminar este registro?
+            </div>
+            <div class="modal-footer">
+                @using (Html.BeginForm("DeleteConfirmed", "Paquetes_Excursiones", FormMethod.Post, new { id = "deletePeForm" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" id="deletePeId" name="id" />
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-danger">Eliminar definitivamente</button>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).on("click", "#submitCreatePeAjax", function (e) {
+            e.preventDefault();
+            const form = $("#createPaquetesExcursionesForm"); // Corregir el ID aquí
+            $.ajax({
+                url: form.attr("action"),
+                type: form.attr("method"),
+                data: form.serialize(),
+                dataType: "json",
+                success: function (result) {
+                    if (result.success) {
+                        // Redirigir a la URL especificada en la respuesta
+                        window.location.href = result.redirectUrl;
+                    } else if (result.validationError) {
+                        // Mostrar errores de validación actualizando el contenido del modal
+                        $("#createPeModalContent").html(result.html);
+                    } else {
+                        alert("Ocurrió un error inesperado al crear el registro.");
+                    }
+                },
+                error: function () {
+                    alert("Error al crear el registro de Paquete-Excursión.");
+                }
+            });
+        });
+
+        $(document).ready(function () {
+            // Acción para editar registro vía AJAX
+            $(document).on("click", ".editPeBtn", function (e) {
+                e.preventDefault();
+                const id = $(this).data("id");
+                $.get('@Url.Action("Edit", "Paquetes_Excursiones")', { id: id }, function (html) {
+                    $("#editPeModalContent").html(html);
+                    $("#editPeModal").modal("show");
+                }).fail(function () {
+                    alert("No se pudo cargar el formulario de edición.");
+                });
+            });
+
+            // Acción para eliminar registro vía AJAX
+            $(document).on("click", ".deletePeBtn", function (e) {
+                e.preventDefault();
+                const id = $(this).data("id");
+                // Aquí se podría hacer una solicitud para obtener datos, pero para simplicidad, asignamos el id
+                $("#deletePeId").val(id);
+                $("#deletePeModal").modal("show");
+            });
+        });
+    </script>
+}

@@ -1,0 +1,41 @@
+﻿@model ModelLayer.DTO.ExcursionesViewModel
+
+<div class="modal-header bg-primary text-white">
+    <h5 class="modal-title">Agregar Excursión</h5>
+    <button type="button" class="btn-close btn-close-white"
+            data-bs-dismiss="modal" aria-label="Cerrar">
+    </button>
+</div>
+
+@using (Html.BeginForm("Create", "Excursiones", FormMethod.Post, new { id = "createExcursionForm" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="modal-body">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="mb-3">
+        @Html.LabelFor(m => m.Nombre, new { @class = "form-label" })
+        @Html.TextBoxFor(m => m.Nombre, new { @class = "form-control", placeholder = "Nombre de la excursión", required = "required" })
+        @Html.ValidationMessageFor(m => m.Nombre, "", new { @class = "text-danger" })
+    </div>
+    <div class="mb-3">
+        @Html.LabelFor(m => m.Descripcion, new { @class = "form-label" })
+        @Html.TextBoxFor(m => m.Descripcion, new { @class = "form-control", placeholder = "Descripción de la excursión", required = "required" })
+        @Html.ValidationMessageFor(m => m.Descripcion, "", new { @class = "text-danger" })
+    </div>
+    <div class="mb-3">
+        @Html.LabelFor(m => m.Precio, new { @class = "form-label" })
+        @Html.TextBoxFor(m => m.Precio, new { @class = "form-control", type = "number", step = "0.01", min = "0", required = "required" })
+        @Html.ValidationMessageFor(m => m.Precio, "", new { @class = "text-danger" })
+    </div>
+    <div class="mb-3">
+        @Html.LabelFor(m => m.Capacidad, new { @class = "form-label" })
+        @Html.TextBoxFor(m => m.Capacidad, new { @class = "form-control", type = "number", min = "1", required = "required" })
+        @Html.ValidationMessageFor(m => m.Capacidad, "", new { @class = "text-danger" })
+    </div>
+</div>
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+    <button type="button" id="submitCreateExcursionAjax" class="btn btn-success">Guardar</button>
+</div>
+}

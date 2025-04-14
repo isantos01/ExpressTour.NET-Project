@@ -1,0 +1,167 @@
+﻿@model IEnumerable<ModelLayer.DTO.UsuarioViewModel>
+
+@{
+    Layout = "~/Views/Shared/_ClientesLayout.cshtml";
+    ViewBag.Title = "Gestión de Usuarios";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Listado de Usuarios</h2>
+
+    <div class="text-center mb-4">
+        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createUsuarioModal">
+            Crear Nuevo Usuario
+        </button>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success text-center">@TempData["Success"]</div>
+    }
+    @if (TempData["Warning"] != null)
+    {
+        <div class="alert alert-warning text-center">@TempData["Warning"]</div>
+    }
+
+    <table class="table table-striped text-center">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre de Usuario</th>
+                <th>Rol</th>
+                <th>Fecha de Creación</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var usuario in Model)
+            {
+                <tr>
+                    <td>@usuario.Id</td>
+                    <td>@usuario.NombreUsuario</td>
+                    <td>@usuario.Rol</td>
+                    <td>@usuario.FechaCreacion.ToShortDateString()</td>
+                    <td>
+                        <button type="button" class="btn btn-sm btn-primary editUsuarioBtn" data-id="@usuario.Id">
+                            Editar
+                        </button>
+                        <button type="button" class="btn btn-sm btn-danger deleteUsuarioBtn" data-id="@usuario.Id">
+                            Eliminar
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div class="text-center mb-4">
+        <div class="text-center mb-4">
+            <a href="@Url.Action("Index", "Dashboard")" class="btn btn-secondary btn-sm">
+                Home Dashboard
+            </a>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal: Crear Usuario -->
+<div class="modal fade" id="createUsuarioModal" tabindex="-1" aria-labelledby="createUsuarioModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="createUsuarioModalContent">
+            @Html.Action("Create", "Usuarios")
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Editar Usuario -->
+<div class="modal fade" id="editUsuarioModal" tabindex="-1" aria-labelledby="editUsuarioModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="editUsuarioModalContent">
+            <!-- Contenido inyectado por AJAX -->
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal: Confirmar Eliminación de Usuario -->
+<div class="modal fade" id="deleteUsuarioModal" tabindex="-1" aria-labelledby="deleteUsuarioModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="deleteUsuarioModalLabel">Confirmar Eliminación</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                ¿Estás seguro de que deseas eliminar este usuario?
+            </div>
+            <div class="modal-footer">
+                @using (Html.BeginForm("DeleteConfirmed", "Usuarios", FormMethod.Post, new { id = "deleteUsuarioForm" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" id="deleteUsuarioId" name="id" />
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-danger">Eliminar definitivamente</button>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Script para Crear Usuario (AJAX)
+        $(document).on("click", "#submitCreateUsuario", function (e) {
+            e.preventDefault();
+            const form = $("#createUsuarioForm");
+            $.ajax({
+                url: form.attr("action"),
+                type: form.attr("method"),
+                data: form.serialize(),
+                success: function (response) {
+                    if (response.success) {
+                        $("#createUsuarioModal").modal("hide");
+                        window.location.reload(); // Recarga la página para ver el nuevo usuario
+                    } else {
+                        $("#createUsuarioModalContent").html(response.html);
+                    }
+                },
+                error: function () {
+                    alert("Error al crear el usuario.");
+                }
+            });
+        });
+
+        // Script para Eliminar Usuario
+        $(document).on("click", ".deleteUsuarioBtn", function () {
+            const id = $(this).data("id");
+            $("#deleteUsuarioId").val(id);
+            $("#deleteUsuarioModal").modal("show");
+        });
+
+        // Script para Confirmar Eliminación (AJAX)
+        $(document).on("submit", "#deleteUsuarioForm", function (e) {
+            e.preventDefault();
+            const form = $(this);
+            $.ajax({
+                url: form.attr("action"),
+                type: form.attr("method"),
+                data: form.serialize(),
+                success: function () {
+                    $("#deleteUsuarioModal").modal("hide");
+                    window.location.reload(); // Recarga para actualizar la lista
+                },
+                error: function () {
+                    alert("Error al eliminar el usuario.");
+                }
+            });
+        });
+
+        // Script para Editar (ya existente)
+        $(document).on("click", ".editUsuarioBtn", function () {
+            const id = $(this).data("id");
+            $.get('@Url.Action("Edit", "Usuarios")', { id: id }, function (html) {
+                $("#editUsuarioModalContent").html(html);
+                $("#editUsuarioModal").modal("show");
+            });
+        });
+    </script>
+}

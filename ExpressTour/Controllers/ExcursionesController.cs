@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Web.Mvc;
 using BusinessLayer.Services;
 using ModelLayer.DTO;
@@ -21,10 +22,10 @@ namespace ExpressTour.Controllers
             return View(excursiones);
         }
 
-        // GET: Excursiones/Create
+        // GET: Excursiones/Create (retorna parcial)
         public ActionResult Create()
         {
-            return View();
+            return PartialView("_CreateExcursiones", new ExcursionesViewModel());
         }
 
         // POST: Excursiones/Create
@@ -32,31 +33,33 @@ namespace ExpressTour.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(ExcursionesViewModel model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                try
+                return Json(new
                 {
-                    _excursionesService.AgregarExcursion(model);
-                    TempData["Success"] = "Excursión creada correctamente.";
-                    return RedirectToAction("Index");
-                }
-                catch (Exception ex)
-                {
-                    ModelState.AddModelError("", "Hubo un problema al crear la excursión: " + ex.Message);
-                }
+                    success = false,
+                    html = RenderPartialViewToString("_CreateExcursiones", model)
+                });
             }
-            return View(model);
+
+            _excursionesService.AgregarExcursion(model);
+            TempData["Success"] = "Excursión creada correctamente.";
+
+            return Json(new
+            {
+                success = true,
+                redirectUrl = Url.Action("Index")
+            });
         }
 
-        // GET: Excursiones/Edit/5
+        // GET: Excursiones/Edit/5 (retorna parcial)
         public ActionResult Edit(int id)
         {
             var excursion = _excursionesService.ObtenerExcursionPorId(id);
             if (excursion == null)
-            {
                 return HttpNotFound();
-            }
-            return View(excursion);
+
+            return PartialView("_EditExcursiones", excursion);
         }
 
         // POST: Excursiones/Edit/5
@@ -64,49 +67,62 @@ namespace ExpressTour.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(ExcursionesViewModel model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                try
-                {
-                    _excursionesService.ActualizarExcursion(model);
-                    TempData["Success"] = "Excursión actualizada correctamente.";
-                    return RedirectToAction("Index");
-                }
-                catch (Exception ex)
-                {
-                    ModelState.AddModelError("", "Hubo un problema al actualizar la excursión: " + ex.Message);
-                }
+                return PartialView("_EditExcursiones", model);
             }
-            return View(model);
+
+            _excursionesService.ActualizarExcursion(model);
+            TempData["Success"] = "Excursión actualizada correctamente.";
+            return RedirectToAction("Index");
         }
 
-        // GET: Excursiones/Delete/5
+        // GET: Excursiones/Delete/5 (retorna parcial)
         public ActionResult Delete(int id)
         {
             var excursion = _excursionesService.ObtenerExcursionPorId(id);
             if (excursion == null)
-            {
                 return HttpNotFound();
-            }
-            return View(excursion);
+
+            return PartialView("_DeleteExcursiones", excursion);
         }
 
-        // POST: Excursiones/Delete/5
-        [HttpPost, ActionName("Delete")]
+        // POST: Excursiones/DeleteConfirmed
+        [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            try
+            _excursionesService.EliminarExcursion(id);
+            TempData["Success"] = "Excursión eliminada correctamente.";
+            return RedirectToAction("Index");
+        }
+
+        // Método auxiliar para renderizar vistas parciales como string (para AJAX)
+        protected string RenderPartialViewToString(string viewName, object model)
+        {
+            if (string.IsNullOrEmpty(viewName))
             {
-                _excursionesService.EliminarExcursion(id);
-                TempData["Success"] = "Excursión eliminada correctamente.";
-                return RedirectToAction("Index");
+                viewName = ControllerContext.RouteData.GetRequiredString("action");
             }
-            catch (Exception ex)
+
+            ViewData.Model = model;
+            using (var sw = new StringWriter())
             {
-                ModelState.AddModelError("", "Hubo un problema al eliminar la excursión: " + ex.Message);
-                return View();
+                var viewResult = ViewEngines.Engines.FindPartialView(ControllerContext, viewName);
+                if (viewResult.View == null)
+                {
+                    throw new FileNotFoundException("No se encontró la vista parcial", viewName);
+                }
+
+                var viewContext = new ViewContext(ControllerContext, viewResult.View, ViewData, TempData, sw);
+                viewResult.View.Render(viewContext, sw);
+                return sw.GetStringBuilder().ToString();
             }
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
         }
     }
 }

@@ -1,0 +1,20 @@
+﻿@model ModelLayer.DTO.ExcursionesViewModel
+
+<div class="modal-header bg-danger text-white">
+    <h5 class="modal-title">Eliminar Excursión</h5>
+    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+</div>
+
+@using (Html.BeginForm("DeleteConfirmed", "Excursiones", FormMethod.Post, new { id = "deleteExcursionForm" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.Id)
+    <div class="modal-body">
+        <p>¿Estás seguro de que deseas eliminar la excursión <strong>@Model.Nombre</strong>?</p>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="submit" class="btn btn-danger">Eliminar</button>
+    </div>
+}
